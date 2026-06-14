@@ -26,3 +26,36 @@ test('Author can create and delete article visible to reader', async ({
   const verifyDeletedResponse = await articleApi.getArticle(createdArticle.slug, authorUser.token);
   expect(verifyDeletedResponse.status()).toBe(404);
 });
+
+test('Reader can favorite article created by author', async ({
+  request,
+  authorUser,
+  readerUser,
+}) => {
+  const article = generateArticleData();
+  const articleApi = new ArticlesApi(request);
+  const createdArticle = await articleApi.createArticleAndReturnData(
+    article.title,
+    article.description,
+    article.articleBody,
+    [article.tags],
+    authorUser.token,
+  );
+  const favoriteArticle = await articleApi.favoriteArticleAndReturnData(
+    createdArticle.slug,
+    readerUser.token,
+  );
+  expect(favoriteArticle.favorited).toBe(true);
+  expect(favoriteArticle.favoritesCount).toBe(1);
+  const fetchedArticle = await articleApi.getArticleAndReturnData(
+    createdArticle.slug,
+    authorUser.token,
+  );
+  expect(fetchedArticle.favoritesCount).toBe(1);
+
+  const deleteResponse = await articleApi.deleteArticle(createdArticle.slug, authorUser.token);
+  expect(deleteResponse.status()).toBe(204);
+
+  const verifyDeleteResponse = await articleApi.getArticle(createdArticle.slug, authorUser.token);
+  expect(verifyDeleteResponse.status()).toBe(404);
+});

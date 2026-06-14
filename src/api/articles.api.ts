@@ -64,4 +64,19 @@ export class ArticlesApi {
     const responseBody: ArticleResponse = await response.json();
     return responseBody.article;
   }
+
+  async favoriteArticle(slug: string, token: string): Promise<APIResponse> {
+    return await this.request.post(`${env.API_URL}/articles/${slug}/favorite`, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    });
+  }
+
+  async favoriteArticleAndReturnData(slug: string, token: string): Promise<Article> {
+    const response = await this.favoriteArticle(slug, token);
+    await expect(response).toBeOK();
+    const responseBody: ArticleResponse = await response.json();
+    return responseBody.article;
+  }
 }
