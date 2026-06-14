@@ -33,7 +33,7 @@ export class ArticlesApi {
     body: string,
     tagList: string[],
     token: string,
-  ) {
+  ): Promise<Article> {
     const response = await this.createArticle(title, description, body, tagList, token);
     await expect(response).toBeOK();
     expect(response.status()).toBe(201);
