@@ -1,4 +1,4 @@
-import { test as base, expect } from '@playwright/test';
+import { test as base, expect, APIRequestContext } from '@playwright/test';
 import { HomePage } from '../pages/home.page';
 import { RealWorldFlow } from '../flows/realworld.flow';
 import { LoginPage } from '../pages/login.page';
@@ -19,27 +19,45 @@ type Pages = {
   editorPage: EditorPage;
   articlePage: ArticlePage;
   apiUser: ApiUser;
+  authorUser: ApiUser;
+  readerUser: ApiUser;
+};
+
+const createApiUser = async (request: APIRequestContext): Promise<ApiUser> => {
+  const userApi = new UsersApi(request);
+  const user = generateUserData();
+  const registeredUser = await userApi.registerUserAndReturnData(
+    user.username,
+    user.email,
+    user.password,
+  );
+  const token = registeredUser.token;
+  expect(token).toBeTruthy();
+  return {
+    username: user.username,
+    email: user.email,
+    password: user.password,
+    token,
+  };
 };
 
 export const test = base.extend<Pages>({
   apiUser: async ({ request }, use) => {
-    const userApi = new UsersApi(request);
-    const user = generateUserData();
-    const registeredUser = await userApi.registerUserAndReturnData(
-      user.username,
-      user.email,
-      user.password,
-    );
-    const token = registeredUser.token;
-    expect(token).toBeTruthy();
-    const apiUser: ApiUser = {
-      username: user.username,
-      email: user.email,
-      password: user.password,
-      token,
-    };
+    const apiUser = await createApiUser(request);
 
     await use(apiUser);
+  },
+
+  authorUser: async ({ request }, use) => {
+    const authorUser = await createApiUser(request);
+
+    await use(authorUser);
+  },
+
+  readerUser: async ({ request }, use) => {
+    const readerUser = await createApiUser(request);
+
+    await use(readerUser);
   },
 
   homePage: async ({ page }, use) => {
