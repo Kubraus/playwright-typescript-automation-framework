@@ -92,7 +92,15 @@ export class RealWorldFlow {
     await this.articlePage.openArticleBySlug(slug);
   }
 
-  async getCurrentArticleSlug() {
+  async getCurrentArticleSlug(): Promise<string> {
     return this.articlePage.getCurrentSlug();
+  }
+
+  async addComment(comment: string): Promise<void> {
+    await this.articlePage.addComment(comment);
+  }
+
+  async shouldSeeComment(comment: string): Promise<void> {
+    await expect(this.articlePage.getCommentText()).toContainText(comment);
   }
 }

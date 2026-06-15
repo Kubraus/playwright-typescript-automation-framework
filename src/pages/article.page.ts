@@ -5,12 +5,18 @@ export class ArticlePage extends BasePage {
   private readonly articleTitle: Locator;
   private readonly editArticle: Locator;
   private readonly deleteArticle: Locator;
+  private readonly commentInput: Locator;
+  private readonly postCommentButton: Locator;
+  private readonly commentText: Locator;
 
   constructor(page: Page) {
     super(page);
     this.articleTitle = page.getByRole('heading', { level: 1 });
     this.editArticle = page.getByRole('link', { name: /Edit Article/i }).first();
     this.deleteArticle = page.getByRole('button', { name: /Delete Article/i }).first();
+    this.commentInput = page.locator("[placeholder='Write a comment...']");
+    this.postCommentButton = page.getByRole('button', { name: /Post Comment/i });
+    this.commentText = page.locator('.card-block .card-text');
   }
 
   getArticleTitle(): Locator {
@@ -37,5 +43,14 @@ export class ArticlePage extends BasePage {
 
   async getCurrentSlug(): Promise<string> {
     return this.page.url().split('/').pop()!;
+  }
+
+  async addComment(comment: string): Promise<void> {
+    await this.fill(this.commentInput, comment);
+    await this.click(this.postCommentButton);
+  }
+
+  getCommentText(): Locator {
+    return this.commentText;
   }
 }
