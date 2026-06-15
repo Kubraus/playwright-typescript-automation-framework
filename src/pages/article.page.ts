@@ -39,6 +39,7 @@ export class ArticlePage extends BasePage {
 
   async openArticleBySlug(slug: string): Promise<void> {
     await this.page.goto(`/article/${slug}`);
+    await this.page.waitForLoadState('networkidle');
   }
 
   async getCurrentSlug(): Promise<string> {

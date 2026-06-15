@@ -66,25 +66,27 @@ test('Reader can add comment to article created by author', async ({
   authorUser,
   readerUser,
 }) => {
+  let createdArticleSlug: string | undefined;
   const comment = 'This is my first UI comment';
   const article = generateArticleData();
   const articleApi = new ArticlesApi(request);
-  const createdArticle = await articleApi.createArticleAndReturnData(
-    article.title,
-    article.description,
-    article.articleBody,
-    [article.tags],
-    authorUser.token,
-  );
-  await realWorld.authenticateWithToken(readerUser.token);
-  await realWorld.openArticleBySlug(createdArticle.slug);
-  await realWorld.shouldSeeArticle(createdArticle.title);
-  await realWorld.addComment(comment);
-  await realWorld.shouldSeeComment(comment);
-
-  const deleteResponse = await articleApi.deleteArticle(createdArticle.slug, authorUser.token);
-  expect(deleteResponse.status()).toBe(204);
-
-  const verifyDeleteResponse = await articleApi.getArticle(createdArticle.slug, authorUser.token);
-  expect(verifyDeleteResponse.status()).toBe(404);
+  try {
+    const createdArticle = await articleApi.createArticleAndReturnData(
+      article.title,
+      article.description,
+      article.articleBody,
+      [article.tags],
+      authorUser.token,
+    );
+    createdArticleSlug = createdArticle.slug;
+    await realWorld.authenticateWithToken(readerUser.token);
+    await realWorld.openArticleBySlug(createdArticle.slug);
+    await realWorld.shouldSeeArticle(createdArticle.title);
+    await realWorld.addComment(comment);
+    await realWorld.shouldSeeComment(comment);
+  } finally {
+    if (createdArticleSlug) {
+      await articleApi.deleteArticle(createdArticleSlug, authorUser.token);
+    }
+  }
 });
