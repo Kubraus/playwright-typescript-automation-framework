@@ -1,7 +1,7 @@
 name: Playwright CI
 
 env:
-  BASE_URL: https://realworld.show
+  BASE_URL: https://demo.realworld.show
   API_URL: https://api.realworld.show/api
 
 on:
