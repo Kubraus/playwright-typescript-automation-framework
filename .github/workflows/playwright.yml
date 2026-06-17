@@ -1,0 +1,42 @@
+name: Playwright CI
+
+env:
+  BASE_URL: https://demo.realworld.show
+  API_URL: https://api.realworld.show/api
+
+on:
+  push:
+    branches:
+      - main
+      - feature/**
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run code quality checks
+        run: npm run check
+
+      - name: Run API tests
+        run: npm run test:api
+
+      - name: Run full test suite
+        run: npm run test:all
