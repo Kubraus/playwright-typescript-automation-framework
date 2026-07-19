@@ -80,7 +80,7 @@ test('Reader can add comment to article created by author', async ({
     );
     createdArticleSlug = createdArticle.slug;
     await realWorld.authenticateWithToken(readerUser.token);
-    await realWorld.openArticleBySlug(createdArticle.slug);
+    await realWorld.openArticleBySlug(createdArticleSlug);
     await realWorld.shouldSeeArticle(createdArticle.title);
     await realWorld.addComment(comment);
     await realWorld.shouldSeeComment(comment);
