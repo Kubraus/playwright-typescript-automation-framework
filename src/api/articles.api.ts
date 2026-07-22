@@ -10,8 +10,9 @@ export class ArticlesApi {
     description: string,
     body: string,
     tagList: string[],
-    token: string,
+    token?: string,
   ): Promise<APIResponse> {
+    const headers: { [key: string]: string } = token ? { Authorization: `Token ${token}` } : {};
     return await this.request.post(`${env.API_URL}/articles`, {
       data: {
         article: {
@@ -21,9 +22,7 @@ export class ArticlesApi {
           tagList,
         },
       },
-      headers: {
-        Authorization: `Token ${token}`,
-      },
+      headers,
     });
   }
 
@@ -42,11 +41,10 @@ export class ArticlesApi {
     return responseBody.article;
   }
 
-  async deleteArticle(slug: string, token: string): Promise<APIResponse> {
+  async deleteArticle(slug: string, token?: string): Promise<APIResponse> {
+    const headers: { [key: string]: string } = token ? { Authorization: `Token ${token}` } : {};
     return await this.request.delete(`${env.API_URL}/articles/${slug}`, {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
+      headers,
     });
   }
 

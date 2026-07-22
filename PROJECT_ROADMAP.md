@@ -1,6 +1,7 @@
 # Playwright RealWorld Framework Roadmap
 
 ## Project Goal
+
 Build an interview-ready Playwright framework demonstrating modern UI and API test automation practices using TypeScript, Playwright and GitHub Actions.
 
 ## Completed
