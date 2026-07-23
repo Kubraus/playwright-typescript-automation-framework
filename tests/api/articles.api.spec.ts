@@ -10,13 +10,11 @@ test.describe('Article creation', () => {
     const user = generateUserData();
     const article = generateArticleData();
     const articleApi = new ArticlesApi(request);
-
-    const response = await usersApi.registerUser(user.username, user.email, user.password);
-    const responseBody = await response.json();
-    expect(response.status()).toBe(201);
-    await expect(response).toBeOK();
-    expect(responseBody.user.token).toBeTruthy();
-    const token: string = responseBody.user.token;
+    const token = await usersApi.registerUserAndReturnToken(
+      user.username,
+      user.email,
+      user.password,
+    );
 
     const articleResponse = await articleApi.createArticle(
       article.title,
@@ -55,12 +53,11 @@ test.describe('Article creation', () => {
     const article = generateArticleData();
     const articleApi = new ArticlesApi(request);
 
-    const response = await usersApi.registerUser(user.username, user.email, user.password);
-    const responseBody = await response.json();
-    expect(response.status()).toBe(201);
-    await expect(response).toBeOK();
-    expect(responseBody.user.token).toBeTruthy();
-    const token: string = responseBody.user.token;
+    const token = await usersApi.registerUserAndReturnToken(
+      user.username,
+      user.email,
+      user.password,
+    );
 
     const articleResponse = await articleApi.createArticle(
       '',
@@ -80,12 +77,11 @@ test.describe('Article creation', () => {
     const article = generateArticleData();
     const articleApi = new ArticlesApi(request);
 
-    const response = await usersApi.registerUser(user.username, user.email, user.password);
-    const responseBody = await response.json();
-    expect(response.status()).toBe(201);
-    await expect(response).toBeOK();
-    expect(responseBody.user.token).toBeTruthy();
-    const token: string = responseBody.user.token;
+    const token = await usersApi.registerUserAndReturnToken(
+      user.username,
+      user.email,
+      user.password,
+    );
 
     const articleResponse = await articleApi.createArticle(
       article.title,
@@ -105,12 +101,11 @@ test.describe('Article creation', () => {
     const article = generateArticleData();
     const articleApi = new ArticlesApi(request);
 
-    const response = await usersApi.registerUser(user.username, user.email, user.password);
-    const responseBody = await response.json();
-    expect(response.status()).toBe(201);
-    await expect(response).toBeOK();
-    expect(responseBody.user.token).toBeTruthy();
-    const token: string = responseBody.user.token;
+    const token = await usersApi.registerUserAndReturnToken(
+      user.username,
+      user.email,
+      user.password,
+    );
 
     const articleResponse = await articleApi.createArticle(
       article.title,
@@ -133,12 +128,11 @@ test.describe('Article deletion', () => {
     const article = generateArticleData();
     const articleApi = new ArticlesApi(request);
 
-    const response = await usersApi.registerUser(user.username, user.email, user.password);
-    const responseBody = await response.json();
-    expect(response.status()).toBe(201);
-    await expect(response).toBeOK();
-    expect(responseBody.user.token).toBeTruthy();
-    const token: string = responseBody.user.token;
+    const token = await usersApi.registerUserAndReturnToken(
+      user.username,
+      user.email,
+      user.password,
+    );
 
     const createdArticle = await articleApi.createArticleAndReturnData(
       article.title,
@@ -163,12 +157,11 @@ test.describe('Article deletion', () => {
     const article = generateArticleData();
     const articleApi = new ArticlesApi(request);
 
-    const response = await usersApi.registerUser(user.username, user.email, user.password);
-    const responseBody = await response.json();
-    expect(response.status()).toBe(201);
-    await expect(response).toBeOK();
-    expect(responseBody.user.token).toBeTruthy();
-    const token: string = responseBody.user.token;
+    const token = await usersApi.registerUserAndReturnToken(
+      user.username,
+      user.email,
+      user.password,
+    );
 
     const createdArticle = await articleApi.createArticleAndReturnData(
       article.title,
@@ -191,12 +184,11 @@ test.describe('Article deletion', () => {
     const usersApi = new UsersApi(request);
     const user = generateUserData();
     const articleApi = new ArticlesApi(request);
-    const response = await usersApi.registerUser(user.username, user.email, user.password);
-    const responseBody = await response.json();
-    expect(response.status()).toBe(201);
-    await expect(response).toBeOK();
-    expect(responseBody.user.token).toBeTruthy();
-    const token: string = responseBody.user.token;
+    const token = await usersApi.registerUserAndReturnToken(
+      user.username,
+      user.email,
+      user.password,
+    );
     const deleteResponse = await articleApi.deleteArticle(
       `non-existing-article-${Date.now()}`,
       token,
