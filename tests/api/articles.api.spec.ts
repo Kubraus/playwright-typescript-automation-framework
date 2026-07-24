@@ -4,6 +4,35 @@ import { generateArticleData } from '../../src/test-data/article.data';
 import { UsersApi } from '../../src/api/users.api';
 import { generateUserData } from '../../src/test-data/user.data';
 
+type ArticleData = ReturnType<typeof generateArticleData>;
+
+const articleValidationCases = [
+  {
+    field: 'title',
+    prepareData: (article: ArticleData) => ({
+      title: '',
+      description: article.description,
+      body: article.articleBody,
+    }),
+  },
+  {
+    field: 'description',
+    prepareData: (article: ArticleData) => ({
+      title: article.title,
+      description: '',
+      body: article.articleBody,
+    }),
+  },
+  {
+    field: 'body',
+    prepareData: (article: ArticleData) => ({
+      title: article.title,
+      description: article.description,
+      body: '',
+    }),
+  },
+];
+
 test.describe('Article creation', () => {
   test('Should create new article', async ({ request }) => {
     const usersApi = new UsersApi(request);
@@ -47,78 +76,34 @@ test.describe('Article creation', () => {
     expect(responseBody.errors.token).toContain('is missing');
   });
 
-  test('Should reject article creation without article title', async ({ request }) => {
-    const usersApi = new UsersApi(request);
-    const user = generateUserData();
-    const article = generateArticleData();
-    const articleApi = new ArticlesApi(request);
+  for (const validationCase of articleValidationCases) {
+    test(`Should reject article creation without article ${validationCase.field}`, async ({
+      request,
+    }) => {
+      const usersApi = new UsersApi(request);
+      const user = generateUserData();
+      const article = generateArticleData();
+      const articleApi = new ArticlesApi(request);
+      const invalidArticleData = validationCase.prepareData(article);
 
-    const token = await usersApi.registerUserAndReturnToken(
-      user.username,
-      user.email,
-      user.password,
-    );
+      const token = await usersApi.registerUserAndReturnToken(
+        user.username,
+        user.email,
+        user.password,
+      );
 
-    const articleResponse = await articleApi.createArticle(
-      '',
-      article.description,
-      article.articleBody,
-      [article.tags],
-      token,
-    );
-    expect(articleResponse.status()).toBe(422);
-    const articleResponseBody = await articleResponse.json();
-    expect(articleResponseBody.errors.title).toContain("can't be blank");
-  });
-
-  test('Should reject article creation without article description', async ({ request }) => {
-    const usersApi = new UsersApi(request);
-    const user = generateUserData();
-    const article = generateArticleData();
-    const articleApi = new ArticlesApi(request);
-
-    const token = await usersApi.registerUserAndReturnToken(
-      user.username,
-      user.email,
-      user.password,
-    );
-
-    const articleResponse = await articleApi.createArticle(
-      article.title,
-      '',
-      article.articleBody,
-      [article.tags],
-      token,
-    );
-    expect(articleResponse.status()).toBe(422);
-    const articleResponseBody = await articleResponse.json();
-    expect(articleResponseBody.errors.description).toContain("can't be blank");
-  });
-
-  test('Should reject article creation without article body', async ({ request }) => {
-    const usersApi = new UsersApi(request);
-    const user = generateUserData();
-    const article = generateArticleData();
-    const articleApi = new ArticlesApi(request);
-
-    const token = await usersApi.registerUserAndReturnToken(
-      user.username,
-      user.email,
-      user.password,
-    );
-
-    const articleResponse = await articleApi.createArticle(
-      article.title,
-      article.description,
-      '',
-      [article.tags],
-      token,
-    );
-
-    expect(articleResponse.status()).toBe(422);
-    const articleResponseBody = await articleResponse.json();
-    expect(articleResponseBody.errors.body).toContain("can't be blank");
-  });
+      const articleResponse = await articleApi.createArticle(
+        invalidArticleData.title,
+        invalidArticleData.description,
+        invalidArticleData.body,
+        [article.tags],
+        token,
+      );
+      expect(articleResponse.status()).toBe(422);
+      const articleResponseBody = await articleResponse.json();
+      expect(articleResponseBody.errors[validationCase.field]).toContain("can't be blank");
+    });
+  }
 });
 
 test.describe('Article deletion', () => {
