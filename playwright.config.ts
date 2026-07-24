@@ -21,6 +21,9 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
+  // The public RealWorld API becomes unstable under concurrent load
+  // and intermittently returns 503/404 responses.
+  // Run tests sequentially to keep the suite deterministic.
   workers: 1,
   // workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
