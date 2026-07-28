@@ -1,14 +1,14 @@
 {
-  "name": "playwright-realworld-framework",
+  "name": "playwright-typescript-automation-framework",
   "version": "1.0.0",
-  "description": "",
+  "description": "Portfolio test automation framework built with Playwright and TypeScript.",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:api": "playwright test tests/api --workers=4",
-    "test:all": "playwright test --workers=1",
+    "test:stable": "playwright test --workers=1",
     "test:debug": "playwright test --debug",
     "report": "playwright show-report",
     "typecheck": "tsc --noEmit",
