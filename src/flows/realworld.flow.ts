@@ -103,4 +103,20 @@ export class RealWorldFlow {
   async shouldSeeComment(comment: string): Promise<void> {
     await expect(this.articlePage.getCommentText()).toContainText(comment);
   }
+
+  async getLoginErrorMessage(): Promise<string> {
+    return this.loginPage.getErrorMessage();
+  }
+
+  async enterLoginEmail(email: string): Promise<void> {
+    await this.loginPage.fillEmail(email);
+  }
+
+  async enterLoginPassword(password: string): Promise<void> {
+    await this.loginPage.fillPassword(password);
+  }
+
+  async shouldSeeSignInButtonDisabled(): Promise<void> {
+    await expect(this.loginPage.getSignInButton()).toBeDisabled();
+  }
 }

@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This project is a test automation framework built with Playwright and TypeScript. 
+This project is a test automation framework built with Playwright and TypeScript.
 
 It demonstrates modern test automation practices by combining UI testing, API testing, and end-to-end business workflows in a clean and maintainable architecture.
 
@@ -12,35 +12,35 @@ It was created as a portfolio project to demonstrate my approach to designing a 
 
 ## Why this project?
 
-I created this project to deepen my knowledge of Playwright and TypeScript by designing and implementing a complete automation framework. 
+I created this project to deepen my knowledge of Playwright and TypeScript by designing and implementing a complete automation framework.
 
 My goal was not only to automate tests, but also to apply software engineering principles such as modular architecture, maintainability, and code reusability.
 
 ## Features
 
-| Feature | Purpose |
-|----------|-------------|
-| UI Testing | Automates end-to-end browser scenarios using Playwright |
-| API Testing | Validates REST API endpoints independently from the UI |
-| Business Flows | Combines API and UI interactions into reusable business scenarios |
-| Page Object Model | Encapsulates page elements and user interactions |
-| Fixtures | Provides reusable test setup and dependency injection |
-| Test Data Generator | Creates unique test data using Faker |
-| HTML Reports | Generates Playwright HTML execution reports |
-| ESLint & Prettier | Ensures consistent code quality and formatting |
+| Feature             | Purpose                                                           |
+| ------------------- | ----------------------------------------------------------------- |
+| UI Testing          | Automates end-to-end browser scenarios using Playwright           |
+| API Testing         | Validates REST API endpoints independently from the UI            |
+| Business Flows      | Combines API and UI interactions into reusable business scenarios |
+| Page Object Model   | Encapsulates page elements and user interactions                  |
+| Fixtures            | Provides reusable test setup and dependency injection             |
+| Test Data Generator | Creates unique test data using Faker                              |
+| HTML Reports        | Generates Playwright HTML execution reports                       |
+| ESLint & Prettier   | Ensures consistent code quality and formatting                    |
 
 ## Tech Stack
 
-| Technology | Purpose |
-|------------|---------|
-| Playwright | Browser automation, API testing, fixtures, assertions, and test reporting |
-| TypeScript | Static typing and maintainable test code |
-| Node.js | Runtime environment for the automation framework |
-| Faker | Generation of unique and dynamic test data |
-| dotenv | Loading environment-specific configuration |
-| ESLint | Static code analysis and enforcement of coding standards |
-| Prettier | Consistent automatic code formatting |
-| GitHub Actions | Continuous integration and automated test execution |
+| Technology     | Purpose                                                                   |
+| -------------- | ------------------------------------------------------------------------- |
+| Playwright     | Browser automation, API testing, fixtures, assertions, and test reporting |
+| TypeScript     | Static typing and maintainable test code                                  |
+| Node.js        | Runtime environment for the automation framework                          |
+| Faker          | Generation of unique and dynamic test data                                |
+| dotenv         | Loading environment-specific configuration                                |
+| ESLint         | Static code analysis and enforcement of coding standards                  |
+| Prettier       | Consistent automatic code formatting                                      |
+| GitHub Actions | Continuous integration and automated test execution                       |
 
 ## Project Structure
 
@@ -67,19 +67,19 @@ The project is organized into dedicated layers to keep test code modular, readab
 └── README.md
 ```
 
-| Directory | Purpose |
-|-----------|---------|
+| Directory           | Purpose                                                                                                |
+| ------------------- | ------------------------------------------------------------------------------------------------------ |
 | `.github/workflows` | Contains GitHub Actions workflows responsible for continuous integration and automated test execution. |
-| `src/api` | Provides reusable API clients and methods for interacting with REST endpoints. |
-| `src/components` | Contains reusable UI components shared across multiple pages. |
-| `src/config` | Stores environment configuration and framework settings. |
-| `src/fixtures` | Defines reusable Playwright fixtures and dependency injection for tests. |
-| `src/flows` | Encapsulates reusable business workflows that combine multiple UI and API operations. |
-| `src/pages` | Contains Page Object Model classes responsible for page locators and interactions. |
-| `src/test-data` | Stores reusable test data, generators, and data-related utilities. |
-| `src/types` | Contains TypeScript interfaces and types used across the framework. |
-| `tests` | Contains UI, API, and end-to-end test specifications. |
-| `tests/api` | Contains tests focused specifically on REST API validation. |
+| `src/api`           | Provides reusable API clients and methods for interacting with REST endpoints.                         |
+| `src/components`    | Contains reusable UI components shared across multiple pages.                                          |
+| `src/config`        | Stores environment configuration and framework settings.                                               |
+| `src/fixtures`      | Defines reusable Playwright fixtures and dependency injection for tests.                               |
+| `src/flows`         | Encapsulates reusable business workflows that combine multiple UI and API operations.                  |
+| `src/pages`         | Contains Page Object Model classes responsible for page locators and interactions.                     |
+| `src/test-data`     | Stores reusable test data, generators, and data-related utilities.                                     |
+| `src/types`         | Contains TypeScript interfaces and types used across the framework.                                    |
+| `tests`             | Contains UI, API, and end-to-end test specifications.                                                  |
+| `tests/api`         | Contains tests focused specifically on REST API validation.                                            |
 
 ## Installation
 
@@ -120,25 +120,25 @@ BASE_URL=https://demo.realworld.show
 API_URL=https://api.realworld.show/api
 ```
 
-| Variable | Description |
-|----------|-------------|
-| `BASE_URL` | Base URL of the web application used for UI tests. |
-| `API_URL` | Base URL of the REST API used for API testing and business workflows. |
+| Variable   | Description                                                           |
+| ---------- | --------------------------------------------------------------------- |
+| `BASE_URL` | Base URL of the web application used for UI tests.                    |
+| `API_URL`  | Base URL of the REST API used for API testing and business workflows. |
 
 ## Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm test` | Runs the complete Playwright test suite. |
-| `npm run test:headed` | Runs tests in headed mode. |
-| `npm run test:api` | Runs API tests only. |
-| `npm run test:all` | Runs all tests using a single worker for maximum stability. |
-| `npm run test:debug` | Runs tests in Playwright Inspector. |
-| `npm run report` | Opens the Playwright HTML report. |
-| `npm run lint` | Runs ESLint. |
-| `npm run format` | Formats the project using Prettier. |
-| `npm run typecheck` | Runs TypeScript type checking. |
-| `npm run check` | Formats, lints, and type-checks the project. |
+| Command               | Description                                                 |
+| --------------------- | ----------------------------------------------------------- |
+| `npm test`            | Runs the complete Playwright test suite.                    |
+| `npm run test:headed` | Runs tests in headed mode.                                  |
+| `npm run test:api`    | Runs API tests only.                                        |
+| `npm run test:all`    | Runs all tests using a single worker for maximum stability. |
+| `npm run test:debug`  | Runs tests in Playwright Inspector.                         |
+| `npm run report`      | Opens the Playwright HTML report.                           |
+| `npm run lint`        | Runs ESLint.                                                |
+| `npm run format`      | Formats the project using Prettier.                         |
+| `npm run typecheck`   | Runs TypeScript type checking.                              |
+| `npm run check`       | Formats, lints, and type-checks the project.                |
 
 ## Framework Architecture
 
@@ -163,13 +163,13 @@ This approach improves maintainability, readability, scalability, and code reusa
                  RealWorld Application
 ```
 
-| Layer | Responsibility |
-|-------|----------------|
-| **Test Specification** | Defines the test scenario and expected outcome without implementation details. |
-| **Playwright Fixtures** | Provides reusable test setup and dependency injection. |
-| **Business Flows** | Encapsulates complete business scenarios by combining UI and API operations. |
-| **Page Objects** | Encapsulate page locators and UI interactions following the Page Object Model. |
-| **API Layer** | Provides reusable methods for communicating with REST API endpoints. |
+| Layer                   | Responsibility                                                                 |
+| ----------------------- | ------------------------------------------------------------------------------ |
+| **Test Specification**  | Defines the test scenario and expected outcome without implementation details. |
+| **Playwright Fixtures** | Provides reusable test setup and dependency injection.                         |
+| **Business Flows**      | Encapsulates complete business scenarios by combining UI and API operations.   |
+| **Page Objects**        | Encapsulate page locators and UI interactions following the Page Object Model. |
+| **API Layer**           | Provides reusable methods for communicating with REST API endpoints.           |
 
 ## Design Decisions
 
@@ -252,6 +252,7 @@ Potential future enhancements include:
 - Cross-browser execution in CI.
 - Performance and accessibility testing.
 - Additional end-to-end business scenarios.
+
 ---
 
 This project is actively maintained as part of my professional portfolio and continuous learning journey in Playwright, TypeScript, and modern test automation.
