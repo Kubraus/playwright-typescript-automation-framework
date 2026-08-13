@@ -8,6 +8,7 @@ import { ArticlePage } from '../pages/article.page';
 import { UsersApi } from '../api/users.api';
 import { generateUserData } from '../test-data/user.data';
 import { ApiUser } from '../types/api-user.types';
+import { SignUpPage } from '../pages/signUp.page';
 
 export { expect } from '@playwright/test';
 
@@ -15,6 +16,7 @@ type Pages = {
   homePage: HomePage;
   realWorld: RealWorldFlow;
   loginPage: LoginPage;
+  signUpPage: SignUpPage;
   headerComponent: HeaderComponent;
   editorPage: EditorPage;
   articlePage: ArticlePage;
@@ -90,13 +92,23 @@ export const test = base.extend<Pages>({
     await use(articlePage);
   },
 
-  realWorld: async ({ homePage, loginPage, headerComponent, editorPage, articlePage }, use) => {
+  signUpPage: async ({ page }, use) => {
+    const signUpPage = new SignUpPage(page);
+
+    await use(signUpPage);
+  },
+
+  realWorld: async (
+    { homePage, loginPage, headerComponent, editorPage, articlePage, signUpPage },
+    use,
+  ) => {
     const realWorld = new RealWorldFlow(
       homePage,
       loginPage,
       headerComponent,
       editorPage,
       articlePage,
+      signUpPage,
     );
 
     await use(realWorld);

@@ -34,7 +34,6 @@ export class UsersApi {
     password: string,
   ): Promise<string> {
     const response = await this.registerUser(username, email, password);
-    await expect(response).toBeOK();
     expect(response.status()).toBe(201);
     const responseBody: UserResponse = await response.json();
     expect(responseBody.user.token).toBeTruthy();

@@ -4,6 +4,7 @@ import { LoginPage } from '../pages/login.page';
 import { HeaderComponent } from '../components/header.component';
 import { EditorPage } from '../pages/editor.page';
 import { ArticlePage } from '../pages/article.page';
+import { SignUpPage } from '../pages/signUp.page';
 
 export class RealWorldFlow {
   constructor(
@@ -12,6 +13,7 @@ export class RealWorldFlow {
     private readonly headerComponent: HeaderComponent,
     private readonly editorPage: EditorPage,
     private readonly articlePage: ArticlePage,
+    private readonly signUpPage: SignUpPage,
   ) {}
 
   async openHomePage(): Promise<void> {
@@ -118,5 +120,29 @@ export class RealWorldFlow {
 
   async shouldSeeSignInButtonDisabled(): Promise<void> {
     await expect(this.loginPage.getSignInButton()).toBeDisabled();
+  }
+
+  async openSignUpPage(): Promise<void> {
+    await this.signUpPage.openSignUpPage();
+  }
+
+  async register(username: string, email: string, password: string): Promise<void> {
+    await this.signUpPage.register(username, email, password);
+  }
+
+  async fillSignUpUsername(username: string): Promise<void> {
+    await this.signUpPage.fillUsername(username);
+  }
+
+  async fillSignUpEmail(email: string): Promise<void> {
+    await this.signUpPage.fillEmail(email);
+  }
+
+  async fillSignUpPassword(password: string): Promise<void> {
+    await this.signUpPage.fillPassword(password);
+  }
+
+  async shouldSeeSignUpButtonDisabled(): Promise<void> {
+    await expect(this.signUpPage.getSignUpButton()).toBeDisabled();
   }
 }
