@@ -7,6 +7,7 @@ export class EditorPage extends BasePage {
   private readonly articleBody: Locator;
   private readonly enterTagsInput: Locator;
   private readonly publishButton: Locator;
+  private readonly errorMessage: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -15,6 +16,7 @@ export class EditorPage extends BasePage {
     this.articleBody = page.locator("textarea[name='body']");
     this.enterTagsInput = page.locator("input[placeholder='Enter tags']");
     this.publishButton = page.getByRole('button', { name: /Publish Article/i });
+    this.errorMessage = page.locator('.error-messages li');
   }
 
   async createArticle(
@@ -35,6 +37,31 @@ export class EditorPage extends BasePage {
     await this.click(this.publishButton);
     await createArticleResponsePromise;
     await this.page.waitForURL(/\/article\//);
+  }
+
+  async fillTitleInput(title: string): Promise<void> {
+    await this.clearAndFill(this.titleInput, title);
+  }
+
+  async fillDescriptionInput(description: string): Promise<void> {
+    await this.clearAndFill(this.descriptionInput, description);
+  }
+
+  async fillArticleBodyInput(articleBody: string): Promise<void> {
+    await this.clearAndFill(this.articleBody, articleBody);
+  }
+
+  async fillTagsInput(tags: string): Promise<void> {
+    await this.clearAndFill(this.enterTagsInput, tags);
+  }
+
+  async clickPublishButton(): Promise<void> {
+    await this.click(this.publishButton);
+  }
+
+  async getArticleErrorMessage(): Promise<string> {
+    await this.waitForVisible(this.errorMessage);
+    return this.errorMessage.innerText();
   }
 
   async updateArticle(

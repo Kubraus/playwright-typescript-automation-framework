@@ -145,4 +145,28 @@ export class RealWorldFlow {
   async shouldSeeSignUpButtonDisabled(): Promise<void> {
     await expect(this.signUpPage.getSignUpButton()).toBeDisabled();
   }
+
+  async fillArticleTitle(title: string): Promise<void> {
+    await this.editorPage.fillTitleInput(title);
+  }
+
+  async fillArticleDescription(description: string): Promise<void> {
+    await this.editorPage.fillDescriptionInput(description);
+  }
+
+  async fillArticleBody(articleBody: string): Promise<void> {
+    await this.editorPage.fillArticleBodyInput(articleBody);
+  }
+
+  async fillArticleTags(articleTags: string): Promise<void> {
+    await this.editorPage.fillTagsInput(articleTags);
+  }
+
+  async submitPublishArticle(): Promise<void> {
+    await this.editorPage.clickPublishButton();
+  }
+
+  async getArticleErrorMessage(): Promise<string> {
+    return this.editorPage.getArticleErrorMessage();
+  }
 }
