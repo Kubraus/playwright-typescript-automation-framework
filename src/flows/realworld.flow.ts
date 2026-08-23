@@ -5,6 +5,7 @@ import { HeaderComponent } from '../components/header.component';
 import { EditorPage } from '../pages/editor.page';
 import { ArticlePage } from '../pages/article.page';
 import { SignUpPage } from '../pages/signUp.page';
+import { ProfilePage } from '../pages/profile.page';
 
 export class RealWorldFlow {
   constructor(
@@ -14,6 +15,7 @@ export class RealWorldFlow {
     private readonly editorPage: EditorPage,
     private readonly articlePage: ArticlePage,
     private readonly signUpPage: SignUpPage,
+    private readonly profilePage: ProfilePage,
   ) {}
 
   async openHomePage(): Promise<void> {
@@ -168,5 +170,55 @@ export class RealWorldFlow {
 
   async getArticleErrorMessage(): Promise<string> {
     return this.editorPage.getArticleErrorMessage();
+  }
+
+  async getFirstAuthorName(): Promise<string> {
+    return this.homePage.getAuthorName();
+  }
+
+  async openFirstAuthorProfile(): Promise<void> {
+    await this.homePage.clickFirstAuthor();
+  }
+
+  async shouldSeeProfileAuthorName(expectedName: string): Promise<void> {
+    await expect(this.profilePage.getAuthorName()).toHaveText(expectedName);
+  }
+
+  async shouldSeeMyPostsTab(): Promise<void> {
+    await expect(this.profilePage.getMyPostsTab()).toBeVisible();
+    await expect(this.profilePage.getMyPostsTab()).toHaveClass(/active/);
+  }
+
+  async shouldArticlesListNotBeEmpty(): Promise<void> {
+    await expect.poll(async () => this.profilePage.getArticlesList().count()).toBeGreaterThan(0);
+  }
+
+  async clickFollowButton(): Promise<void> {
+    await this.profilePage.clickFollow();
+  }
+
+  async clickUnfollowButton(): Promise<void> {
+    await this.profilePage.clickUnfollow();
+  }
+
+  async shouldSeeUnfollowButton(authorName: string): Promise<void> {
+    await expect(this.profilePage.getUnfollowButton()).toHaveText(`Unfollow ${authorName}`);
+  }
+
+  async shouldSeeFollowButton(authorName: string): Promise<void> {
+    await expect(this.profilePage.getFollowButton()).toHaveText(`Follow ${authorName}`);
+  }
+
+  async shouldSeeLoginPage(): Promise<void> {
+    await this.loginPage.shouldBeOnLoginPage();
+  }
+
+  async openFavoritedPosts(): Promise<void> {
+    await this.profilePage.clickFavoritedPostsTab();
+  }
+
+  async shouldSeeFavoritedPostsTab(): Promise<void> {
+    await expect(this.profilePage.getFavoritedPostsTab()).toBeVisible();
+    await expect(this.profilePage.getFavoritedPostsTab()).toHaveClass(/active/);
   }
 }
