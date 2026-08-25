@@ -65,3 +65,17 @@ test('Should display favorited article on user profile', async ({ realWorld, rea
   await realWorld.shouldSeeFavoritedPostsTab();
   await realWorld.shouldSeeArticleWithTitle(articleTitle);
 });
+
+test('Should remove favorited article from user profile', async ({ realWorld, readerUser }) => {
+  await realWorld.authenticateWithToken(readerUser.token);
+  await realWorld.shouldSeeAuthenticatedHomePage();
+  const articleTitle = await realWorld.getFirstArticleTitle();
+  await realWorld.clickFavoriteButtonOnTheFirstArticle();
+  await realWorld.shouldFirstArticleBeFavorited();
+  await realWorld.clickFavoriteButtonOnTheFirstArticle();
+  await realWorld.shouldFirstArticleNotBeFavorited();
+  await realWorld.openUserProfile(readerUser.username);
+  await realWorld.openFavoritedPosts();
+  await realWorld.shouldSeeFavoritedPostsTab();
+  await realWorld.shouldNotSeeArticleWithTitle(articleTitle);
+});

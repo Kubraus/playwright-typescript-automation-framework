@@ -226,6 +226,10 @@ export class RealWorldFlow {
     await expect(this.profilePage.getArticleTitleLocator(title)).toBeVisible();
   }
 
+  async shouldNotSeeArticleWithTitle(title: string): Promise<void> {
+    await expect(this.profilePage.getArticleTitleLocator(title)).not.toBeVisible();
+  }
+
   async clickFavoriteButtonOnTheFirstArticle(): Promise<void> {
     await this.homePage.clickFirstArticleFavoriteButton();
   }
@@ -236,5 +240,13 @@ export class RealWorldFlow {
 
   async openUserProfile(username: string): Promise<void> {
     await this.profilePage.openProfile(username);
+  }
+
+  async shouldFirstArticleBeFavorited(): Promise<void> {
+    await expect(this.homePage.getFirstArticleFavoriteButton()).toHaveClass(/btn-primary/);
+  }
+
+  async shouldFirstArticleNotBeFavorited(): Promise<void> {
+    await expect(this.homePage.getFirstArticleFavoriteButton()).toHaveClass(/btn-outline-primary/);
   }
 }

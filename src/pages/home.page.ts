@@ -72,4 +72,8 @@ export class HomePage extends BasePage {
   async clickFirstArticleFavoriteButton(): Promise<void> {
     await this.click(this.firstFavoriteButton);
   }
+
+  getFirstArticleFavoriteButton(): Locator {
+    return this.firstFavoriteButton;
+  }
 }
