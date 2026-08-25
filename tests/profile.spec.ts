@@ -54,3 +54,14 @@ test('Should display favorite posts on author profile', async ({ realWorld }) =>
   await realWorld.shouldSeeFavoritedPostsTab();
   await realWorld.shouldArticlesListNotBeEmpty();
 });
+
+test('Should display favorited article on user profile', async ({ realWorld, readerUser }) => {
+  await realWorld.authenticateWithToken(readerUser.token);
+  await realWorld.shouldSeeAuthenticatedHomePage();
+  const articleTitle = await realWorld.getFirstArticleTitle();
+  await realWorld.clickFavoriteButtonOnTheFirstArticle();
+  await realWorld.openUserProfile(readerUser.username);
+  await realWorld.openFavoritedPosts();
+  await realWorld.shouldSeeFavoritedPostsTab();
+  await realWorld.shouldSeeArticleWithTitle(articleTitle);
+});

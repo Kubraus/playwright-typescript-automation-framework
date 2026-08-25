@@ -221,4 +221,20 @@ export class RealWorldFlow {
     await expect(this.profilePage.getFavoritedPostsTab()).toBeVisible();
     await expect(this.profilePage.getFavoritedPostsTab()).toHaveClass(/active/);
   }
+
+  async shouldSeeArticleWithTitle(title: string): Promise<void> {
+    await expect(this.profilePage.getArticleTitleLocator(title)).toBeVisible();
+  }
+
+  async clickFavoriteButtonOnTheFirstArticle(): Promise<void> {
+    await this.homePage.clickFirstArticleFavoriteButton();
+  }
+
+  async getFirstArticleTitle(): Promise<string> {
+    return this.homePage.getFirstArticleTitle();
+  }
+
+  async openUserProfile(username: string): Promise<void> {
+    await this.profilePage.openProfile(username);
+  }
 }

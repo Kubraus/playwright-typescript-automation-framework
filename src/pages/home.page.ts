@@ -6,6 +6,9 @@ export class HomePage extends BasePage {
   private readonly signIn: Locator;
   private readonly signUp: Locator;
   private readonly authorName: Locator;
+  private readonly firstArticleCard: Locator;
+  private readonly firstArticleTitle: Locator;
+  private readonly firstFavoriteButton: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -13,6 +16,9 @@ export class HomePage extends BasePage {
     this.signIn = page.locator('a[href="/login"]');
     this.signUp = page.locator('a[href="/register"]');
     this.authorName = page.locator('.author').first();
+    this.firstArticleCard = page.locator('.article-preview').first();
+    this.firstArticleTitle = this.firstArticleCard.locator('.preview-link h1');
+    this.firstFavoriteButton = this.firstArticleCard.locator('button');
   }
 
   async setJwtToken(token: string): Promise<void> {
@@ -57,5 +63,13 @@ export class HomePage extends BasePage {
 
   getAuthorName(): Promise<string> {
     return this.authorName.innerText();
+  }
+
+  async getFirstArticleTitle(): Promise<string> {
+    return await this.getText(this.firstArticleTitle);
+  }
+
+  async clickFirstArticleFavoriteButton(): Promise<void> {
+    await this.click(this.firstFavoriteButton);
   }
 }

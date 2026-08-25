@@ -56,4 +56,12 @@ export class ProfilePage extends BasePage {
   getFavoritedPostsTab(): Locator {
     return this.favoritedPostsTab;
   }
+
+  getArticleTitleLocator(title: string): Locator {
+    return this.articlesList.getByRole('heading', { name: title });
+  }
+
+  async openProfile(username: string): Promise<void> {
+    await this.page.goto(`/profile/${username}`);
+  }
 }
