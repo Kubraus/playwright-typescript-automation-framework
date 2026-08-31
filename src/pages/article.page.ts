@@ -7,7 +7,6 @@ export class ArticlePage extends BasePage {
   private readonly deleteArticle: Locator;
   private readonly commentInput: Locator;
   private readonly postCommentButton: Locator;
-  private readonly commentText: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -16,15 +15,10 @@ export class ArticlePage extends BasePage {
     this.deleteArticle = page.getByRole('button', { name: /Delete Article/i }).first();
     this.commentInput = page.locator("[placeholder='Write a comment...']");
     this.postCommentButton = page.getByRole('button', { name: /Post Comment/i });
-    this.commentText = page.locator('.card-block .card-text');
   }
 
   getArticleTitle(): Locator {
     return this.articleTitle;
-  }
-
-  getEditArticleButton(): Locator {
-    return this.editArticle;
   }
 
   async clickEditArticle(): Promise<void> {
@@ -51,7 +45,15 @@ export class ArticlePage extends BasePage {
     await this.click(this.postCommentButton);
   }
 
-  getCommentText(): Locator {
-    return this.commentText;
+  getCommentByText(comment: string): Locator {
+    return this.page.locator('.card').filter({
+      has: this.page.locator('.card-text', { hasText: comment }),
+    });
+  }
+
+  async deleteComment(comment: string): Promise<void> {
+    const commentCard = this.getCommentByText(comment);
+    const deleteButton = commentCard.locator('.ion-trash-a');
+    await this.click(deleteButton);
   }
 }

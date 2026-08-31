@@ -90,3 +90,70 @@ test('Reader can add comment to article created by author', async ({
     }
   }
 });
+
+test('Reader can delete own comment from article', async ({
+  realWorld,
+  request,
+  authorUser,
+  readerUser,
+}) => {
+  let createdArticleSlug: string | undefined;
+  const comment = `Comment to delete ${Date.now()}`;
+  const article = generateArticleData();
+  const articleApi = new ArticlesApi(request);
+  try {
+    const createdArticle = await articleApi.createArticleAndReturnData(
+      article.title,
+      article.description,
+      article.articleBody,
+      [article.tags],
+      authorUser.token,
+    );
+    createdArticleSlug = createdArticle.slug;
+    await realWorld.authenticateWithToken(readerUser.token);
+    await realWorld.openArticleBySlug(createdArticleSlug);
+    await realWorld.shouldSeeArticle(createdArticle.title);
+    await realWorld.addComment(comment);
+    await realWorld.shouldSeeComment(comment);
+    await realWorld.deleteComment(comment);
+    await realWorld.shouldNotSeeComment(comment);
+  } finally {
+    if (createdArticleSlug) {
+      await articleApi.deleteArticle(createdArticleSlug, authorUser.token);
+    }
+  }
+});
+
+test('Reader should see multiple comments on article', async ({
+  realWorld,
+  request,
+  authorUser,
+  readerUser,
+}) => {
+  let createdArticleSlug: string | undefined;
+  const firstComment = `First comment ${Date.now()}`;
+  const secondComment = `Second comment ${Date.now()}`;
+  const article = generateArticleData();
+  const articleApi = new ArticlesApi(request);
+  try {
+    const createdArticle = await articleApi.createArticleAndReturnData(
+      article.title,
+      article.description,
+      article.articleBody,
+      [article.tags],
+      authorUser.token,
+    );
+    createdArticleSlug = createdArticle.slug;
+    await realWorld.authenticateWithToken(readerUser.token);
+    await realWorld.openArticleBySlug(createdArticleSlug);
+    await realWorld.shouldSeeArticle(createdArticle.title);
+    await realWorld.addComment(firstComment);
+    await realWorld.shouldSeeComment(firstComment);
+    await realWorld.addComment(secondComment);
+    await realWorld.shouldSeeComment(secondComment);
+  } finally {
+    if (createdArticleSlug) {
+      await articleApi.deleteArticle(createdArticleSlug, authorUser.token);
+    }
+  }
+});

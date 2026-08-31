@@ -105,7 +105,7 @@ export class RealWorldFlow {
   }
 
   async shouldSeeComment(comment: string): Promise<void> {
-    await expect(this.articlePage.getCommentText()).toContainText(comment);
+    await expect(this.articlePage.getCommentByText(comment)).toBeVisible();
   }
 
   async getLoginErrorMessage(): Promise<string> {
@@ -248,5 +248,13 @@ export class RealWorldFlow {
 
   async shouldFirstArticleNotBeFavorited(): Promise<void> {
     await expect(this.homePage.getFirstArticleFavoriteButton()).toHaveClass(/btn-outline-primary/);
+  }
+
+  async deleteComment(comment: string): Promise<void> {
+    await this.articlePage.deleteComment(comment);
+  }
+
+  async shouldNotSeeComment(comment: string): Promise<void> {
+    await expect(this.articlePage.getCommentByText(comment)).not.toBeVisible();
   }
 }
