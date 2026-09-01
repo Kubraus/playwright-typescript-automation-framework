@@ -39,4 +39,15 @@ export class UsersApi {
     expect(responseBody.user.token).toBeTruthy();
     return responseBody.user.token;
   }
+
+  async loginUser(email: string, password: string) {
+    return this.request.post(`${env.API_URL}/users/login`, {
+      data: {
+        user: {
+          email,
+          password,
+        },
+      },
+    });
+  }
 }

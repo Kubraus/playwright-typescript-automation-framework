@@ -63,5 +63,6 @@ export class ProfilePage extends BasePage {
 
   async openProfile(username: string): Promise<void> {
     await this.page.goto(`/profile/${username}`);
+    await this.waitForVisible(this.authorName);
   }
 }
