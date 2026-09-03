@@ -41,6 +41,18 @@ export class ArticlesApi {
     return responseBody.article;
   }
 
+  async waitUntilArticleExists(slug: string, token: string): Promise<void> {
+    await expect
+      .poll(
+        async () => {
+          const response = await this.getArticle(slug, token);
+          return response.status();
+        },
+        { timeout: 10000 },
+      )
+      .toBe(200);
+  }
+
   async deleteArticle(slug: string, token?: string): Promise<APIResponse> {
     const headers: { [key: string]: string } = token ? { Authorization: `Token ${token}` } : {};
     return await this.request.delete(`${env.API_URL}/articles/${slug}`, {

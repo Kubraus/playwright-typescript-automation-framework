@@ -257,4 +257,32 @@ export class RealWorldFlow {
   async shouldNotSeeComment(comment: string): Promise<void> {
     await expect(this.articlePage.getCommentByText(comment)).not.toBeVisible();
   }
+
+  async openFirstArticle(): Promise<void> {
+    await this.homePage.clickFirstArticleTitle();
+  }
+
+  async shouldSeeSignUpPage(): Promise<void> {
+    await this.signUpPage.shouldBeOnSignUpPage();
+  }
+
+  async shouldSeeGlobalFeedTab(): Promise<void> {
+    await expect(this.homePage.getGlobalFeedTab()).toBeVisible();
+  }
+
+  async shouldSeeYourFeedTab(): Promise<void> {
+    await expect(this.homePage.getYourFeedTab()).toBeVisible();
+  }
+
+  async shouldGlobalFeedTabBeActive(): Promise<void> {
+    await expect(this.homePage.getGlobalFeedTab()).toHaveClass(/active/);
+  }
+
+  async shouldYourFeedTabBeActive(): Promise<void> {
+    await expect(this.homePage.getYourFeedTab()).toHaveClass(/active/);
+  }
+
+  async openYourFeedTab(): Promise<void> {
+    await this.homePage.clickYourFeedTab();
+  }
 }

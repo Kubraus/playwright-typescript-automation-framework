@@ -17,6 +17,7 @@ test('Author can create and delete article visible to reader', async ({
     [article.tags],
     authorUser.token,
   );
+  await articleApi.waitUntilArticleExists(createdArticle.slug, readerUser.token);
   await realWorld.authenticateWithToken(readerUser.token);
   await realWorld.openArticleBySlug(createdArticle.slug);
   await realWorld.shouldSeeArticle(createdArticle.title);
@@ -41,6 +42,7 @@ test('Reader can favorite article created by author', async ({
     [article.tags],
     authorUser.token,
   );
+  await articleApi.waitUntilArticleExists(createdArticle.slug, readerUser.token);
   const favoriteArticle = await articleApi.favoriteArticleAndReturnData(
     createdArticle.slug,
     readerUser.token,
@@ -78,6 +80,7 @@ test('Reader can add comment to article created by author', async ({
       [article.tags],
       authorUser.token,
     );
+    await articleApi.waitUntilArticleExists(createdArticle.slug, readerUser.token);
     createdArticleSlug = createdArticle.slug;
     await realWorld.authenticateWithToken(readerUser.token);
     await realWorld.openArticleBySlug(createdArticleSlug);
@@ -109,6 +112,7 @@ test('Reader can delete own comment from article', async ({
       [article.tags],
       authorUser.token,
     );
+    await articleApi.waitUntilArticleExists(createdArticle.slug, readerUser.token);
     createdArticleSlug = createdArticle.slug;
     await realWorld.authenticateWithToken(readerUser.token);
     await realWorld.openArticleBySlug(createdArticleSlug);
@@ -143,6 +147,7 @@ test('Reader should see multiple comments on article', async ({
       [article.tags],
       authorUser.token,
     );
+    await articleApi.waitUntilArticleExists(createdArticle.slug, readerUser.token);
     createdArticleSlug = createdArticle.slug;
     await realWorld.authenticateWithToken(readerUser.token);
     await realWorld.openArticleBySlug(createdArticleSlug);

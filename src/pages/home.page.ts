@@ -9,6 +9,9 @@ export class HomePage extends BasePage {
   private readonly firstArticleCard: Locator;
   private readonly firstArticleTitle: Locator;
   private readonly firstFavoriteButton: Locator;
+  private readonly firstArticleLink: Locator;
+  private readonly globalFeedTab: Locator;
+  private readonly yourFeedTab: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -17,8 +20,11 @@ export class HomePage extends BasePage {
     this.signUp = page.locator('a[href="/register"]');
     this.authorName = page.locator('.author').first();
     this.firstArticleCard = page.locator('.article-preview').first();
-    this.firstArticleTitle = this.firstArticleCard.locator('.preview-link h1');
+    this.firstArticleLink = this.firstArticleCard.locator('.preview-link');
+    this.firstArticleTitle = this.firstArticleLink.locator('h1');
     this.firstFavoriteButton = this.firstArticleCard.locator('button');
+    this.globalFeedTab = page.getByRole('link', { name: 'Global Feed' });
+    this.yourFeedTab = page.getByRole('link', { name: 'Your Feed' });
   }
 
   async setJwtToken(token: string): Promise<void> {
@@ -75,5 +81,22 @@ export class HomePage extends BasePage {
 
   getFirstArticleFavoriteButton(): Locator {
     return this.firstFavoriteButton;
+  }
+
+  async clickFirstArticleTitle(): Promise<void> {
+    await this.click(this.firstArticleLink);
+    await this.page.waitForURL(/\/article\//);
+  }
+
+  getGlobalFeedTab(): Locator {
+    return this.globalFeedTab;
+  }
+
+  getYourFeedTab(): Locator {
+    return this.yourFeedTab;
+  }
+
+  async clickYourFeedTab(): Promise<void> {
+    await this.click(this.yourFeedTab);
   }
 }

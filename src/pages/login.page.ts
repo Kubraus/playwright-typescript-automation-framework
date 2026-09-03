@@ -23,8 +23,8 @@ export class LoginPage extends BasePage {
     await this.fill(this.emailInput, email);
   }
 
-  async fillPassword(email: string): Promise<void> {
-    await this.fill(this.passwordInput, email);
+  async fillPassword(password: string): Promise<void> {
+    await this.fill(this.passwordInput, password);
   }
 
   getSignInButton(): Locator {

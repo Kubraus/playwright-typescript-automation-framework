@@ -1,5 +1,5 @@
 import { BasePage } from './base.page';
-import { Locator, Page } from '@playwright/test';
+import { Locator, Page, expect } from '@playwright/test';
 
 export class SignUpPage extends BasePage {
   private readonly signUpButton: Locator;
@@ -40,5 +40,9 @@ export class SignUpPage extends BasePage {
     await this.fillEmail(email);
     await this.fillPassword(password);
     await this.click(this.signUpButton);
+  }
+
+  async shouldBeOnSignUpPage(): Promise<void> {
+    await expect(this.page).toHaveURL(/\/register/);
   }
 }
