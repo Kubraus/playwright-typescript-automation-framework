@@ -36,3 +36,16 @@ test('Should switch from Global Feed to Your Feed', async ({ realWorld, apiUser 
   await realWorld.openYourFeedTab();
   await realWorld.shouldYourFeedTabBeActive();
 });
+
+test('Should switch from Your Feed back to Global Feed', async ({realWorld, apiUser}) => {
+  await realWorld.authenticateWithToken(apiUser.token);
+  await realWorld.shouldSeeAuthenticatedHomePage();
+  await realWorld.shouldSeeGlobalFeedTab();
+  await realWorld.shouldGlobalFeedTabBeActive();
+  await realWorld.shouldSeeYourFeedTab();
+  await realWorld.openYourFeedTab();
+  await realWorld.shouldYourFeedTabBeActive();
+  await realWorld.shouldSeeGlobalFeedTab();
+  await realWorld.openGlobalFeedTab();
+  await realWorld.shouldGlobalFeedTabBeActive();
+});

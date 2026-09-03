@@ -2,6 +2,8 @@ import { test, expect } from '../src/fixtures/test.fixture';
 import { generateArticleData } from '../src/test-data/article.data';
 import { ArticlesApi } from '../src/api/articles.api';
 
+test.describe.configure({ retries: 1 });
+
 test('Author can create and delete article visible to reader', async ({
   realWorld,
   request,

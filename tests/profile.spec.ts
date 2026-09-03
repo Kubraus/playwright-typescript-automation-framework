@@ -60,6 +60,7 @@ test('Should display favorited article on user profile', async ({ realWorld, rea
   await realWorld.shouldSeeAuthenticatedHomePage();
   const articleTitle = await realWorld.getFirstArticleTitle();
   await realWorld.clickFavoriteButtonOnTheFirstArticle();
+  await realWorld.shouldFirstArticleBeFavorited();
   await realWorld.openUserProfile(readerUser.username);
   await realWorld.openFavoritedPosts();
   await realWorld.shouldSeeFavoritedPostsTab();

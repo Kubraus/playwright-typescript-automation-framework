@@ -23,8 +23,9 @@ export class HomePage extends BasePage {
     this.firstArticleLink = this.firstArticleCard.locator('.preview-link');
     this.firstArticleTitle = this.firstArticleLink.locator('h1');
     this.firstFavoriteButton = this.firstArticleCard.locator('button');
-    this.globalFeedTab = page.getByRole('link', { name: 'Global Feed' });
-    this.yourFeedTab = page.getByRole('link', { name: 'Your Feed' });
+    this.globalFeedTab = page.locator('.feed-toggle').getByRole('link', { name: 'Global Feed' });
+    this.yourFeedTab = page.locator('.feed-toggle').getByRole('link', { name: 'Your Feed' });
+
   }
 
   async setJwtToken(token: string): Promise<void> {
@@ -98,5 +99,9 @@ export class HomePage extends BasePage {
 
   async clickYourFeedTab(): Promise<void> {
     await this.click(this.yourFeedTab);
+  }
+
+  async clickGlobalFeedTab(): Promise<void> {
+    await this.click(this.globalFeedTab);
   }
 }

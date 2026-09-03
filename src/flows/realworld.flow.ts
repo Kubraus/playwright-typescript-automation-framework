@@ -285,4 +285,8 @@ export class RealWorldFlow {
   async openYourFeedTab(): Promise<void> {
     await this.homePage.clickYourFeedTab();
   }
+
+  async openGlobalFeedTab(): Promise<void> {
+    await this.homePage.clickGlobalFeedTab();
+  }
 }
