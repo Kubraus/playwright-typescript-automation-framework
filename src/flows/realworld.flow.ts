@@ -6,6 +6,7 @@ import { EditorPage } from '../pages/editor.page';
 import { ArticlePage } from '../pages/article.page';
 import { SignUpPage } from '../pages/signUp.page';
 import { ProfilePage } from '../pages/profile.page';
+import { SettingsPage } from '../pages/settings.page';
 
 export class RealWorldFlow {
   constructor(
@@ -16,6 +17,7 @@ export class RealWorldFlow {
     private readonly articlePage: ArticlePage,
     private readonly signUpPage: SignUpPage,
     private readonly profilePage: ProfilePage,
+    private readonly settingsPage: SettingsPage,
   ) {}
 
   async openHomePage(): Promise<void> {
@@ -294,5 +296,17 @@ export class RealWorldFlow {
     await expect
       .poll(async () => this.homePage.getGlobalFeedArticlesList().count())
       .toBeGreaterThan(0);
+  }
+
+  async openSettingsPage(): Promise<void> {
+    await this.headerComponent.clickOnSettingsLink();
+  }
+
+  async shouldSeeLogoutButton(): Promise<void> {
+    await expect(this.settingsPage.getLogoutButton()).toBeVisible();
+  }
+
+  async logout(): Promise<void> {
+    await this.settingsPage.clickLogout();
   }
 }

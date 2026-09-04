@@ -10,6 +10,7 @@ import { generateUserData } from '../test-data/user.data';
 import { ApiUser } from '../types/api-user.types';
 import { SignUpPage } from '../pages/signUp.page';
 import { ProfilePage } from '../pages/profile.page';
+import { SettingsPage } from '../pages/settings.page';
 
 export { expect } from '@playwright/test';
 
@@ -25,6 +26,7 @@ type Pages = {
   authorUser: ApiUser;
   readerUser: ApiUser;
   profilePage: ProfilePage;
+  settingsPage: SettingsPage;
 };
 
 const createApiUser = async (request: APIRequestContext): Promise<ApiUser> => {
@@ -106,8 +108,23 @@ export const test = base.extend<Pages>({
     await use(profilePage);
   },
 
+  settingsPage: async ({ page }, use) => {
+    const settingsPage = new SettingsPage(page);
+
+    await use(settingsPage);
+  },
+
   realWorld: async (
-    { homePage, loginPage, headerComponent, editorPage, articlePage, signUpPage, profilePage },
+    {
+      homePage,
+      loginPage,
+      headerComponent,
+      editorPage,
+      articlePage,
+      signUpPage,
+      profilePage,
+      settingsPage,
+    },
     use,
   ) => {
     const realWorld = new RealWorldFlow(
@@ -118,6 +135,7 @@ export const test = base.extend<Pages>({
       articlePage,
       signUpPage,
       profilePage,
+      settingsPage,
     );
 
     await use(realWorld);

@@ -32,3 +32,12 @@ test('Should disable login with empty password', async ({ realWorld, apiUser }) 
   await realWorld.enterLoginEmail(apiUser.email);
   await realWorld.shouldSeeSignInButtonDisabled();
 });
+
+test('Should logout authenticated user', async ({ realWorld, apiUser }) => {
+  await realWorld.authenticateWithToken(apiUser.token);
+  await realWorld.shouldSeeAuthenticatedHomePage();
+  await realWorld.openSettingsPage();
+  await realWorld.shouldSeeLogoutButton();
+  await realWorld.logout();
+  await realWorld.shouldSeeHomePage();
+});

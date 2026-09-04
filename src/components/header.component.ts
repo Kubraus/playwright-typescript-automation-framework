@@ -22,4 +22,8 @@ export class HeaderComponent extends BasePage {
   async clickOnNewArticleLink(): Promise<void> {
     await this.click(this.newArticleLink);
   }
+
+  async clickOnSettingsLink(): Promise<void> {
+    await this.click(this.settingsLink);
+  }
 }
