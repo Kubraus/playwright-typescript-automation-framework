@@ -289,4 +289,10 @@ export class RealWorldFlow {
   async openGlobalFeedTab(): Promise<void> {
     await this.homePage.clickGlobalFeedTab();
   }
+
+  async shouldGlobalFeedArticlesNotBeEmpty(): Promise<void> {
+    await expect
+      .poll(async () => this.homePage.getGlobalFeedArticlesList().count())
+      .toBeGreaterThan(0);
+  }
 }

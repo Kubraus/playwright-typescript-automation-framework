@@ -37,7 +37,7 @@ test('Should switch from Global Feed to Your Feed', async ({ realWorld, apiUser 
   await realWorld.shouldYourFeedTabBeActive();
 });
 
-test('Should switch from Your Feed back to Global Feed', async ({realWorld, apiUser}) => {
+test('Should switch from Your Feed back to Global Feed', async ({ realWorld, apiUser }) => {
   await realWorld.authenticateWithToken(apiUser.token);
   await realWorld.shouldSeeAuthenticatedHomePage();
   await realWorld.shouldSeeGlobalFeedTab();
@@ -48,4 +48,12 @@ test('Should switch from Your Feed back to Global Feed', async ({realWorld, apiU
   await realWorld.shouldSeeGlobalFeedTab();
   await realWorld.openGlobalFeedTab();
   await realWorld.shouldGlobalFeedTabBeActive();
+});
+
+test('Should display articles in Global Feed', async ({ realWorld }) => {
+  await realWorld.openHomePage();
+  await realWorld.shouldSeeHomePage();
+  await realWorld.shouldSeeGlobalFeedTab();
+  await realWorld.shouldGlobalFeedTabBeActive();
+  await realWorld.shouldGlobalFeedArticlesNotBeEmpty();
 });

@@ -12,6 +12,7 @@ export class HomePage extends BasePage {
   private readonly firstArticleLink: Locator;
   private readonly globalFeedTab: Locator;
   private readonly yourFeedTab: Locator;
+  private readonly globalFeedArticles: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -25,7 +26,7 @@ export class HomePage extends BasePage {
     this.firstFavoriteButton = this.firstArticleCard.locator('button');
     this.globalFeedTab = page.locator('.feed-toggle').getByRole('link', { name: 'Global Feed' });
     this.yourFeedTab = page.locator('.feed-toggle').getByRole('link', { name: 'Your Feed' });
-
+    this.globalFeedArticles = page.locator('.article-preview');
   }
 
   async setJwtToken(token: string): Promise<void> {
@@ -103,5 +104,9 @@ export class HomePage extends BasePage {
 
   async clickGlobalFeedTab(): Promise<void> {
     await this.click(this.globalFeedTab);
+  }
+
+  getGlobalFeedArticlesList(): Locator {
+    return this.globalFeedArticles;
   }
 }
