@@ -26,6 +26,28 @@ export class ArticlesApi {
     });
   }
 
+  async updateArticle(
+    slug: string,
+    title: string,
+    description: string,
+    body: string,
+    tagList: string[],
+    token?: string,
+  ): Promise<APIResponse> {
+    const headers: { [key: string]: string } = token ? { Authorization: `Token ${token}` } : {};
+    return await this.request.put(`${env.API_URL}/articles/${slug}`, {
+      data: {
+        article: {
+          title,
+          description,
+          body,
+          tagList,
+        },
+      },
+      headers,
+    });
+  }
+
   async createArticleAndReturnData(
     title: string,
     description: string,
