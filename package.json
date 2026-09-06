@@ -7,6 +7,7 @@
     "build": "tsc",
     "test": "playwright test",
     "test:smoke": "playwright test --grep \"@smoke\"",
+    "test:regression": "playwright test",
     "test:headed": "playwright test --headed",
     "test:api": "playwright test tests/api --workers=4",
     "test:stable": "playwright test --workers=1",
