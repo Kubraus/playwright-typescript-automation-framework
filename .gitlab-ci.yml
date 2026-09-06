@@ -28,6 +28,8 @@ smoke:
     paths:
       - playwright-report/
       - test-results/
+    reports:
+      junit: test-results/junit.xml
     expire_in: 7 days
 
 regression:
