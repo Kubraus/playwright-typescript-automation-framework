@@ -216,3 +216,21 @@ test.describe('Article deletion', () => {
     expect(deleteResponseBody.errors.article).toContain('not found');
   });
 });
+
+test.describe('Article retrieval', () => {
+  test('Should return 404 for non-existing article', async ({ request }) => {
+    const usersApi = new UsersApi(request);
+    const user = generateUserData();
+    const articleApi = new ArticlesApi(request);
+    const token = await usersApi.registerUserAndReturnToken(
+      user.username,
+      user.email,
+      user.password,
+    );
+    const slug = `non-existing-article-${Date.now()}`;
+    const response = await articleApi.getArticle(slug, token);
+    expect(response.status()).toBe(404);
+    const responseBody = await response.json();
+    expect(responseBody.errors.article).toContain('not found');
+  });
+});
