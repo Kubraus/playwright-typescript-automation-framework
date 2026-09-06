@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { UsersApi } from '../../src/api/users.api';
 import { generateUserData } from '../../src/test-data/user.data';
 
-test('Register user by API', async ({ request }) => {
+test('Register user by API', { tag: '@smoke' }, async ({ request }) => {
   const usersApi = new UsersApi(request);
   const user = generateUserData();
   const response = await usersApi.registerUser(user.username, user.email, user.password);
@@ -14,7 +14,7 @@ test('Register user by API', async ({ request }) => {
   expect(responseBody.user.token).toBeTruthy();
 });
 
-test('Login registered user by API', async ({ request }) => {
+test('Login registered user by API', { tag: '@smoke' }, async ({ request }) => {
   const usersApi = new UsersApi(request);
   const user = generateUserData();
   await usersApi.registerUserAndReturnData(user.username, user.email, user.password);

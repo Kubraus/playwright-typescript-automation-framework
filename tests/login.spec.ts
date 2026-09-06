@@ -4,10 +4,14 @@ test.beforeEach(async ({ realWorld }) => {
   await realWorld.openLoginPage();
 });
 
-test('Should be able to login with valid credentials', async ({ realWorld, apiUser }) => {
-  await realWorld.login(apiUser.email, apiUser.password);
-  await realWorld.shouldSeeSettingsLink();
-});
+test(
+  'Should be able to login with valid credentials',
+  { tag: '@smoke' },
+  async ({ realWorld, apiUser }) => {
+    await realWorld.login(apiUser.email, apiUser.password);
+    await realWorld.shouldSeeSettingsLink();
+  },
+);
 
 test('Should reject login with invalid password', async ({ realWorld, apiUser }) => {
   const invalidPassword = 'invalid-password';
@@ -33,7 +37,7 @@ test('Should disable login with empty password', async ({ realWorld, apiUser }) 
   await realWorld.shouldSeeSignInButtonDisabled();
 });
 
-test('Should logout authenticated user', async ({ realWorld, apiUser }) => {
+test('Should logout authenticated user', { tag: '@smoke' }, async ({ realWorld, apiUser }) => {
   await realWorld.authenticateWithToken(apiUser.token);
   await realWorld.shouldSeeAuthenticatedHomePage();
   await realWorld.openSettingsPage();

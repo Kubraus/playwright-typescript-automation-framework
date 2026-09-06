@@ -13,7 +13,7 @@ test.beforeEach(async ({ realWorld, apiUser }) => {
   article = generateArticleData();
 });
 
-test('Authenticated user can create article', async ({ realWorld }) => {
+test('Authenticated user can create article', { tag: '@smoke' }, async ({ realWorld }) => {
   await realWorld.createArticle(
     article.title,
     article.description,
