@@ -1,9 +1,7 @@
-import { test, expect } from '@playwright/test';
-import { UsersApi } from '../../src/api/users.api';
+import { test, expect } from '../../src/fixtures/test.fixture';
 import { generateUserData } from '../../src/test-data/user.data';
 
-test('Register user by API', { tag: '@smoke' }, async ({ request }) => {
-  const usersApi = new UsersApi(request);
+test('Register user by API', { tag: '@smoke' }, async ({ usersApi }) => {
   const user = generateUserData();
   const response = await usersApi.registerUser(user.username, user.email, user.password);
   const responseBody = await response.json();
@@ -14,8 +12,7 @@ test('Register user by API', { tag: '@smoke' }, async ({ request }) => {
   expect(responseBody.user.token).toBeTruthy();
 });
 
-test('Login registered user by API', { tag: '@smoke' }, async ({ request }) => {
-  const usersApi = new UsersApi(request);
+test('Login registered user by API', { tag: '@smoke' }, async ({ usersApi }) => {
   const user = generateUserData();
   await usersApi.registerUserAndReturnData(user.username, user.email, user.password);
   const loginResponse = await usersApi.loginUser(user.email, user.password);
@@ -26,8 +23,7 @@ test('Login registered user by API', { tag: '@smoke' }, async ({ request }) => {
   expect(loginResponseBody.user.token).toBeTruthy();
 });
 
-test('Should reject login with invalid credentials', async ({ request }) => {
-  const usersApi = new UsersApi(request);
+test('Should reject login with invalid credentials', async ({ usersApi }) => {
   const user = generateUserData();
   await usersApi.registerUserAndReturnData(user.username, user.email, user.password);
   const loginResponse = await usersApi.loginUser(user.email, user.password + Date.now());
@@ -36,8 +32,7 @@ test('Should reject login with invalid credentials', async ({ request }) => {
   expect(loginResponseBody.errors.credentials).toContain('invalid');
 });
 
-test('Should reject user registration with empty email', async ({ request }) => {
-  const usersApi = new UsersApi(request);
+test('Should reject user registration with empty email', async ({ usersApi }) => {
   const user = generateUserData();
   const response = await usersApi.registerUser(user.username, '', user.password);
   const responseBody = await response.json();

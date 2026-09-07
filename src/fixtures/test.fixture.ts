@@ -29,6 +29,7 @@ type Pages = {
   profilePage: ProfilePage;
   settingsPage: SettingsPage;
   articlesApi: ArticlesApi;
+  usersApi: UsersApi;
 };
 
 const createApiUser = async (request: APIRequestContext): Promise<ApiUser> => {
@@ -120,6 +121,12 @@ export const test = base.extend<Pages>({
     const articlesApi = new ArticlesApi(request);
 
     await use(articlesApi);
+  },
+
+  usersApi: async ({ request }, use) => {
+    const usersApi = new UsersApi(request);
+
+    await use(usersApi);
   },
 
   realWorld: async (
