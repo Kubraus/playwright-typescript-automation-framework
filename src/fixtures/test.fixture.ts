@@ -11,6 +11,7 @@ import { ApiUser } from '../types/api-user.types';
 import { SignUpPage } from '../pages/signUp.page';
 import { ProfilePage } from '../pages/profile.page';
 import { SettingsPage } from '../pages/settings.page';
+import { ArticlesApi } from '../api/articles.api';
 
 export { expect } from '@playwright/test';
 
@@ -27,6 +28,7 @@ type Pages = {
   readerUser: ApiUser;
   profilePage: ProfilePage;
   settingsPage: SettingsPage;
+  articlesApi: ArticlesApi;
 };
 
 const createApiUser = async (request: APIRequestContext): Promise<ApiUser> => {
@@ -112,6 +114,12 @@ export const test = base.extend<Pages>({
     const settingsPage = new SettingsPage(page);
 
     await use(settingsPage);
+  },
+
+  articlesApi: async ({ request }, use) => {
+    const articlesApi = new ArticlesApi(request);
+
+    await use(articlesApi);
   },
 
   realWorld: async (
