@@ -8,7 +8,6 @@ export class ProfilePage extends BasePage {
   private readonly favoritedPostsTab: Locator;
   private readonly myPostsTab: Locator;
   private readonly articlesList: Locator;
-  private readonly editProfileButton: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -18,7 +17,6 @@ export class ProfilePage extends BasePage {
     this.favoritedPostsTab = page.getByRole('link', { name: /Favorited Posts/i });
     this.myPostsTab = page.getByRole('link', { name: /My Posts/i });
     this.articlesList = page.locator('.preview-link');
-    this.editProfileButton = page.getByRole('link', { name: /Edit Profile Settings/i });
   }
 
   async clickFollow(): Promise<void> {

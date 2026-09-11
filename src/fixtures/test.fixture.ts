@@ -15,7 +15,7 @@ import { ArticlesApi } from '../api/articles.api';
 
 export { expect } from '@playwright/test';
 
-type Pages = {
+type TestFixtures = {
   homePage: HomePage;
   realWorld: RealWorldFlow;
   loginPage: LoginPage;
@@ -50,7 +50,7 @@ const createApiUser = async (request: APIRequestContext): Promise<ApiUser> => {
   };
 };
 
-export const test = base.extend<Pages>({
+export const test = base.extend<TestFixtures>({
   apiUser: async ({ request }, use) => {
     const apiUser = await createApiUser(request);
 

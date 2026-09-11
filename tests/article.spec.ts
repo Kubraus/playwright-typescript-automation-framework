@@ -1,19 +1,13 @@
 import { generateArticleData } from '../src/test-data/article.data';
 import { test, expect } from '../src/fixtures/test.fixture';
 
-type ArticleData = ReturnType<typeof generateArticleData>;
-
-let article: ArticleData;
-
-test.describe.configure({ mode: 'serial' });
-
 test.beforeEach(async ({ realWorld, apiUser }) => {
   await realWorld.authenticateWithToken(apiUser.token);
   await realWorld.openNewArticleEditor();
-  article = generateArticleData();
 });
 
 test('Authenticated user can create article', { tag: '@smoke' }, async ({ realWorld }) => {
+  const article = generateArticleData();
   await realWorld.createArticle(
     article.title,
     article.description,
@@ -24,7 +18,7 @@ test('Authenticated user can create article', { tag: '@smoke' }, async ({ realWo
 });
 
 test('Authenticated user can edit created article', async ({ realWorld }) => {
-  const originalArticle = article;
+  const originalArticle = generateArticleData();
   const updatedArticle = generateArticleData();
   await realWorld.createArticle(
     originalArticle.title,
@@ -45,6 +39,7 @@ test('Authenticated user can edit created article', async ({ realWorld }) => {
 });
 
 test('Authenticated user can delete created article', async ({ realWorld }) => {
+  const article = generateArticleData();
   await realWorld.createArticle(
     article.title,
     article.description,
@@ -57,6 +52,7 @@ test('Authenticated user can delete created article', async ({ realWorld }) => {
 });
 
 test('Should reject article creation with empty title', async ({ realWorld }) => {
+  const article = generateArticleData();
   await realWorld.fillArticleDescription(article.description);
   await realWorld.fillArticleBody(article.articleBody);
   await realWorld.fillArticleTags(article.tags);
@@ -65,6 +61,7 @@ test('Should reject article creation with empty title', async ({ realWorld }) =>
 });
 
 test('Should reject article creation with empty description', async ({ realWorld }) => {
+  const article = generateArticleData();
   await realWorld.fillArticleTitle(article.title);
   await realWorld.fillArticleBody(article.articleBody);
   await realWorld.fillArticleTags(article.tags);
@@ -73,6 +70,7 @@ test('Should reject article creation with empty description', async ({ realWorld
 });
 
 test('Should reject article creation with empty body', async ({ realWorld }) => {
+  const article = generateArticleData();
   await realWorld.fillArticleDescription(article.description);
   await realWorld.fillArticleTitle(article.title);
   await realWorld.fillArticleTags(article.tags);
