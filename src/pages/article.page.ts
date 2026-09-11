@@ -32,8 +32,17 @@ export class ArticlePage extends BasePage {
   }
 
   async openArticleBySlug(slug: string): Promise<void> {
+    const articleResponsePromise = this.page.waitForResponse((response) => {
+      return (
+        response.url().includes(`/api/articles/${slug}`) && response.request().method() === 'GET'
+      );
+    });
     await this.page.goto(`/article/${slug}`);
-    await this.page.waitForLoadState('networkidle');
+    const response = await articleResponsePromise;
+
+    if (response.status() !== 200) {
+      throw new Error(`Article request failed with status ${response.status()} for slug: ${slug}`);
+    }
   }
 
   async getCurrentSlug(): Promise<string> {
