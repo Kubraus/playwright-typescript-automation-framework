@@ -1,0 +1,27 @@
+import { test, expect } from '@playwright/test';
+import { redactSecrets } from '../../src/ai/secret-redactor';
+
+test('Should redact password from key-value format', () => {
+  const result = redactSecrets('password=SuperSecret123');
+  expect(result).toBe('password=[REDACTED]');
+});
+
+test('Should redact bearer token', () => {
+  const result = redactSecrets('Authorization: Bearer abc123SUPER_SECRET_TOKEN');
+  expect(result).toBe('Authorization: Bearer [REDACTED]');
+});
+
+test('Should redact bearer token case-insensitively', () => {
+  const result = redactSecrets('authorization: bearer TOP_SECRET');
+  expect(result).toBe('Authorization: Bearer [REDACTED]');
+});
+
+test('Should redact password from source code', () => {
+  const result = redactSecrets("const password = 'MySourceCodeSecret123';");
+  expect(result).toBe("const password = '[REDACTED]';");
+});
+
+test('Should redact password from JSON', () => {
+  const result = redactSecrets('{"username":"Jacob","password":"SuperSecret123"}');
+  expect(result).toBe('{"username":"Jacob","password":"[REDACTED]"}');
+});

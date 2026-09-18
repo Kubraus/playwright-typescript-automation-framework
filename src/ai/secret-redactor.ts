@@ -11,7 +11,7 @@ export function redactSecrets(value: string): string {
   redacted = redacted.replace(/(password\s*=\s*)'[^']+'/gi, "$1'[REDACTED]'");
 
   // Redacts passwords in the format "password = ...".
-  redacted = redacted.replace(/(password\s*=\s*)\S+/gi, '$1[REDACTED]');
+  redacted = redacted.replace(/(password\s*=\s*)[^'"\s]+/gi, '$1[REDACTED]');
 
   // Redacts passwords stored as JSON values.
   redacted = redacted.replace(/("password"\s*:\s*)"[^"]+"/gi, '$1"[REDACTED]"');

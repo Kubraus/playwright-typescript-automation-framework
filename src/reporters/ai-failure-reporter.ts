@@ -1,11 +1,20 @@
-import type { Reporter, TestCase, TestResult } from '@playwright/test/reporter';
+import type { Reporter, TestCase, TestResult, FullConfig } from '@playwright/test/reporter';
 import { extractSourceCode, extractSourceLocation } from '../ai/source-code-extractor';
 import { analyzeFailure } from '../ai/failure-analyzer';
 
 export default class AiFailureReporter implements Reporter {
+  private maxRetries = 0;
+
+  onBegin(config: FullConfig) {
+    this.maxRetries = config.projects[0].retries;
+  }
+
   async onTestEnd(test: TestCase, result: TestResult) {
     try {
       if (result.status !== 'failed') {
+        return;
+      }
+      if (result.retry < this.maxRetries) {
         return;
       }
       if (result.error === undefined) {
