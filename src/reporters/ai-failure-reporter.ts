@@ -11,7 +11,7 @@ export default class AiFailureReporter implements Reporter {
 
   async onTestEnd(test: TestCase, result: TestResult) {
     try {
-      if (result.status !== 'failed') {
+      if (result.status !== 'failed' && result.status !== 'timedOut') {
         return;
       }
       if (result.retry < this.maxRetries) {
@@ -20,8 +20,10 @@ export default class AiFailureReporter implements Reporter {
       if (result.error === undefined) {
         return;
       }
-      const errorMessage = result.error.message ?? 'Not available';
-      const stackTrace = result.error.stack;
+      const errorWithLocation = result.errors.find((error) => error.location !== undefined);
+      const selectedError = errorWithLocation ?? result.error;
+      const errorMessage = selectedError.message ?? 'Not available';
+      const stackTrace = selectedError.stack;
       const testName = test.title;
       let sourceCode: string | undefined;
       if (stackTrace !== undefined) {
