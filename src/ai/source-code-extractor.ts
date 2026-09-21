@@ -1,7 +1,7 @@
 import { readFile } from 'fs/promises';
 import { resolve, sep } from 'node:path';
 
-interface SourceLocation {
+export interface SourceLocation {
   filePath: string;
   line: number;
   column: number;
