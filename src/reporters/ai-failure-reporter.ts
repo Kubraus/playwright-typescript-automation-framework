@@ -18,11 +18,11 @@ export default class AiFailureReporter implements Reporter {
       if (result.retry < this.maxRetries) {
         return;
       }
-      if (result.error === undefined) {
+      const errorWithLocation = result.errors.find((error) => error.location !== undefined);
+      const selectedError = errorWithLocation ?? result.errors[0] ?? result.error;
+      if (selectedError === undefined) {
         return;
       }
-      const errorWithLocation = result.errors.find((error) => error.location !== undefined);
-      const selectedError = errorWithLocation ?? result.error;
       let locationFromSelectedError: SourceLocation | undefined;
       if (selectedError.location !== undefined) {
         locationFromSelectedError = {
