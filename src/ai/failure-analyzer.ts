@@ -16,6 +16,7 @@ export async function analyzeFailure(context: FailureContext): Promise<string | 
   const prompt = `
   Analyze this Playwright test failure.
   Base your analysis solely on the evidence provided. Do not invent code, locators, or application behavior that is not supported by the evidence provided.
+  [REDACTED] was inserted by the sanitizer and was not literally part of the original code or data. Do not treat it as an original value.
   Clearly distinguish between facts derived from the data provided and possible hypotheses.
   If there isn't enough evidence, just say so instead of trying to fill in the gaps.
   Always start your answer with the "Failure Summary" section, where you’ll describe what went wrong in no more than two short sentences.
