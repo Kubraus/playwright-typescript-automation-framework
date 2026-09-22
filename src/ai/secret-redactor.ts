@@ -18,3 +18,10 @@ export function redactSecrets(value: string): string {
 
   return redacted;
 }
+
+export function removeAnsiCodes(value: string): string {
+  let cleanText = value;
+
+  cleanText = cleanText.replace(/\x1B\[[\d;]+m/g, '');
+  return cleanText;
+}

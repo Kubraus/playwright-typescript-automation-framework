@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { redactSecrets } from '../../src/ai/secret-redactor';
+import { redactSecrets, removeAnsiCodes } from '../../src/ai/secret-redactor';
 
 test('Should redact password from key-value format', () => {
   const result = redactSecrets('password=SuperSecret123');
@@ -24,4 +24,14 @@ test('Should redact password from source code', () => {
 test('Should redact password from JSON', () => {
   const result = redactSecrets('{"username":"Jacob","password":"SuperSecret123"}');
   expect(result).toBe('{"username":"Jacob","password":"[REDACTED]"}');
+});
+
+test('Should remove ANSI codes', () => {
+  const result = removeAnsiCodes('\x1B[31mExpected\x1B[39m');
+  expect(result).toBe('Expected');
+});
+
+test('Should remove ANSI codes with multiple parameters', () => {
+  const result = removeAnsiCodes('\x1B[1;31mExpected\x1B[0m');
+  expect(result).toBe('Expected');
 });

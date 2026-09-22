@@ -1,5 +1,5 @@
 import { sendPrompt } from './openai-client';
-import { redactSecrets } from './secret-redactor';
+import { redactSecrets, removeAnsiCodes } from './secret-redactor';
 
 interface FailureContext {
   testName: string;
@@ -10,8 +10,8 @@ interface FailureContext {
 
 export async function analyzeFailure(context: FailureContext): Promise<string | undefined> {
   const safeTestName = redactSecrets(context.testName);
-  const safeErrorMessage = redactSecrets(context.errorMessage);
-  const safeStackTrace = redactSecrets(context.stackTrace ?? 'Not available');
+  const safeErrorMessage = redactSecrets(removeAnsiCodes(context.errorMessage));
+  const safeStackTrace = redactSecrets(removeAnsiCodes(context.stackTrace ?? 'Not available'));
   const safeSourceCode = redactSecrets(context.sourceCode ?? 'Not available');
   const prompt = `
   Analyze this Playwright test failure.
