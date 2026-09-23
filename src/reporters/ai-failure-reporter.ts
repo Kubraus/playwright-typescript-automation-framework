@@ -14,6 +14,8 @@ export default class AiFailureReporter implements Reporter {
   private maxRetries = 0;
   private analyses: FailureAnalysis[] = [];
   private pendingAnalyses: Promise<void>[] = [];
+  private readonly maxAnalyses = 5;
+  private startedAnalyses = 0;
 
   private async processTestEnd(test: TestCase, result: TestResult): Promise<void> {
     try {
@@ -47,6 +49,10 @@ export default class AiFailureReporter implements Reporter {
       if (location !== undefined && location !== null) {
         sourceCode = await extractSourceCode(location);
       }
+      if (this.startedAnalyses >= this.maxAnalyses) {
+        return;
+      }
+      this.startedAnalyses += 1;
       const analysis = await analyzeFailure({
         testName,
         errorMessage,
