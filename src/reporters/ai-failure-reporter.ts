@@ -2,7 +2,7 @@ import type { Reporter, TestCase, TestResult, FullConfig } from '@playwright/tes
 import type { SourceLocation } from '../ai/source-code-extractor';
 import { extractSourceCode, extractSourceLocation } from '../ai/source-code-extractor';
 import { analyzeFailure } from '../ai/failure-analyzer';
-import { writeFile, mkdir } from 'fs/promises';
+import { writeFile, mkdir, rm } from 'fs/promises';
 import { resolve } from 'node:path';
 
 interface FailureAnalysis {
@@ -74,12 +74,17 @@ export default class AiFailureReporter implements Reporter {
   }
 
   async onEnd() {
-    await Promise.all(this.pendingAnalyses);
-    if (this.analyses.length === 0) {
-      return;
-    }
+    await Promise.allSettled(this.pendingAnalyses);
     const reportDirectory = resolve(process.cwd(), 'test-results');
     const reportPath = resolve(reportDirectory, 'ai-failure-analysis.md');
+    if (this.analyses.length === 0) {
+      try {
+        await rm(reportPath, { force: true });
+      } catch {
+        console.error('[AI Analyzer] Unable to remove outdated AI failure report');
+      }
+      return;
+    }
     const report = this.analyses
       .map((item) => {
         return `## ${item.testName}\n\n${item.analysis}`;
