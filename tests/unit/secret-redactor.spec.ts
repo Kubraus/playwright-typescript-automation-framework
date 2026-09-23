@@ -3,7 +3,7 @@ import { redactSecrets, removeAnsiCodes } from '../../src/ai/secret-redactor';
 
 test('Should redact password from key-value format', () => {
   const result = redactSecrets('password=SuperSecret123');
-  expect(result).toBe('password=[REDACTED]');
+  expect(result).toBe('password=[WRONG]');
 });
 
 test('Should redact bearer token', () => {
