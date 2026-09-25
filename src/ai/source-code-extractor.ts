@@ -10,6 +10,7 @@ export interface SourceLocation {
 export function extractSourceLocation(stackTrace: string): SourceLocation | null {
   const lines = stackTrace.split('\n');
   for (const line of lines) {
+    // Support both stack trace formats: at function (file:line:column) and at file:line:column.
     const match = line.match(/\((.*):(\d+):(\d+)/) ?? line.match(/at (.*):(\d+):(\d+)/);
     if (match !== null) {
       return {
@@ -23,6 +24,7 @@ export function extractSourceLocation(stackTrace: string): SourceLocation | null
 }
 
 export async function extractSourceCode(location: SourceLocation): Promise<string | undefined> {
+  // Prevent stack trace paths from reading files outside the project directory.
   const projectRoot = process.cwd();
   const projectRootWithSeparator = projectRoot + sep;
   const fullPath = resolve(projectRoot, location.filePath);
@@ -44,7 +46,7 @@ export async function extractSourceCode(location: SourceLocation): Promise<strin
     console.log(`[AI Analyzer] Source line ${location.line} is outside the file`);
     return undefined;
   }
-
+  // Include 3 lines before and after the failing line for context.
   const start = Math.max(0, errorLineIndex - 3);
   const end = Math.min(lines.length, errorLineIndex + 4);
   return lines

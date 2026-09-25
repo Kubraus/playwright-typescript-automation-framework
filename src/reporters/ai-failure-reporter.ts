@@ -22,9 +22,11 @@ export default class AiFailureReporter implements Reporter {
       if (result.status !== 'failed' && result.status !== 'timedOut') {
         return;
       }
+      // Analyze only the final failed attempt to avoid duplicate AI requests for retries.
       if (result.retry < this.maxRetries) {
         return;
       }
+      // Prefer an error with source location so the analyzer can include relevant source code.
       const errorWithLocation = result.errors.find((error) => error.location !== undefined);
       const selectedError = errorWithLocation ?? result.errors[0] ?? result.error;
       if (selectedError === undefined) {
@@ -49,6 +51,7 @@ export default class AiFailureReporter implements Reporter {
       if (location !== undefined && location !== null) {
         sourceCode = await extractSourceCode(location);
       }
+      // Limit AI requests per test run to control cost and execution time.
       if (this.startedAnalyses >= this.maxAnalyses) {
         return;
       }
@@ -75,11 +78,13 @@ export default class AiFailureReporter implements Reporter {
   }
 
   onTestEnd(test: TestCase, result: TestResult) {
+    // Track analysis promises so Playwright can continue while AI requests run in parallel.
     const processTestEnd = this.processTestEnd(test, result);
     this.pendingAnalyses.push(processTestEnd);
   }
 
   async onEnd() {
+    // Wait for every started analysis without letting one rejected promise block report generation.
     await Promise.allSettled(this.pendingAnalyses);
     const reportDirectory = resolve(process.cwd(), 'test-results');
     const reportPath = resolve(reportDirectory, 'ai-failure-analysis.md');

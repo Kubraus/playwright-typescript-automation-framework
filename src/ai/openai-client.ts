@@ -9,6 +9,7 @@ export async function sendPrompt(prompt: string): Promise<string | undefined> {
     return undefined;
   }
   try {
+    // Limit AI request duration and disable API retries to avoid delaying the test run.
     const openAi = new OpenAI({
       apiKey: openaiApiKey,
       timeout: 30 * 1000,
@@ -17,6 +18,7 @@ export async function sendPrompt(prompt: string): Promise<string | undefined> {
     const response = await openAi.responses.create({
       model: 'gpt-5.6-luna',
       input: prompt,
+      // Do not store analyzer requests and responses for later retrieval.
       store: false,
     });
     return response.output_text;

@@ -10,7 +10,7 @@ export function redactSecrets(value: string): string {
   // Redacts passwords stored as quoted values in source code.
   redacted = redacted.replace(/(password\s*=\s*)'[^']+'/gi, "$1'[REDACTED]'");
 
-  // Redacts passwords in the format "password = ...".
+  // Redacts unquoted password values in key-value format.
   redacted = redacted.replace(/(password\s*=\s*)[^'"\s]+/gi, '$1[REDACTED]');
 
   // Redacts passwords stored as JSON values.
@@ -21,7 +21,7 @@ export function redactSecrets(value: string): string {
 
 export function removeAnsiCodes(value: string): string {
   let cleanText = value;
-
+  // Removes terminal formatting codes to keep AI input clean and readable.
   cleanText = cleanText.replace(/\x1B\[[\d;]+m/g, '');
   return cleanText;
 }
