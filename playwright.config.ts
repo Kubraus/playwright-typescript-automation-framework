@@ -52,15 +52,17 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
 
-    /* {
+    {
       name: 'firefox',
+      testIgnore: ['**/api/**', '**/unit/**'],
       use: { ...devices['Desktop Firefox'] },
     },
 
     {
       name: 'webkit',
+      testIgnore: ['**/api/**', '**/unit/**'],
       use: { ...devices['Desktop Safari'] },
-    },*/
+    },
 
     /* Test against mobile viewports. */
     // {
