@@ -32,13 +32,46 @@ smoke:
       junit: test-results/junit.xml
     expire_in: 7 days
 
-regression:
+regression:chromium:
   stage: regression
   image: mcr.microsoft.com/playwright:v1.60.0-noble
   script:
     - npm ci
-    - npm run test:regression
+    - npx playwright test --project=chromium
   artifacts:
+    name: 'playwright-chromium-$CI_COMMIT_SHORT_SHA'
+    when: always
+    paths:
+      - playwright-report/
+      - test-results/
+    reports:
+      junit: test-results/junit.xml
+    expire_in: 7 days
+
+regression:firefox:
+  stage: regression
+  image: mcr.microsoft.com/playwright:v1.60.0-noble
+  script:
+    - npm ci
+    - npx playwright test --project=firefox
+  artifacts:
+    name: 'playwright-firefox-$CI_COMMIT_SHORT_SHA'
+    when: always
+    paths:
+      - playwright-report/
+      - test-results/
+    reports:
+      junit: test-results/junit.xml
+    expire_in: 7 days
+
+regression:webkit:
+  stage: regression
+  image: mcr.microsoft.com/playwright:v1.60.0-noble
+  script:
+    - npm ci
+    - npx playwright test --project=webkit
+  artifacts:
+    name: 'playwright-webkit-$CI_COMMIT_SHORT_SHA'
     when: always
     paths:
       - playwright-report/
