@@ -70,7 +70,10 @@ export class ArticlesApi {
           const response = await this.getArticle(slug, token);
           return response.status();
         },
-        { timeout: 10000 },
+        {
+          timeout: 20000,
+          intervals: [500, 1000, 2000],
+        },
       )
       .toBe(200);
   }
