@@ -1,4 +1,4 @@
-import type { Reporter, TestCase, TestResult, FullConfig } from '@playwright/test/reporter';
+import type { Reporter, TestCase, TestResult } from '@playwright/test/reporter';
 import type { SourceLocation } from '../ai/source-code-extractor';
 import { extractSourceCode, extractSourceLocation } from '../ai/source-code-extractor';
 import { analyzeFailure } from '../ai/failure-analyzer';
@@ -11,7 +11,6 @@ interface FailureAnalysis {
 }
 
 export default class AiFailureReporter implements Reporter {
-  private maxRetries = 0;
   private analyses: FailureAnalysis[] = [];
   private pendingAnalyses: Promise<void>[] = [];
   private readonly maxAnalyses = 5;
@@ -23,7 +22,7 @@ export default class AiFailureReporter implements Reporter {
         return;
       }
       // Analyze only the final failed attempt to avoid duplicate AI requests for retries.
-      if (result.retry < this.maxRetries) {
+      if (result.retry < test.retries) {
         return;
       }
       // Prefer an error with source location so the analyzer can include relevant source code.
@@ -71,10 +70,6 @@ export default class AiFailureReporter implements Reporter {
     } catch {
       console.error('[AI Analyzer] Unexpected analyzer failure');
     }
-  }
-
-  onBegin(config: FullConfig) {
-    this.maxRetries = config.projects[0].retries;
   }
 
   onTestEnd(test: TestCase, result: TestResult) {
