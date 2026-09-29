@@ -170,7 +170,7 @@ export class RealWorldFlow {
     await this.editorPage.clickPublishButton();
   }
 
-  async getArticleErrorMessage(): Promise<string> {
+  async getArticleErrorMessage(): Promise<string[]> {
     return this.editorPage.getArticleErrorMessage();
   }
 

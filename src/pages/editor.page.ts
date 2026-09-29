@@ -59,9 +59,9 @@ export class EditorPage extends BasePage {
     await this.click(this.publishButton);
   }
 
-  async getArticleErrorMessage(): Promise<string> {
-    await this.waitForVisible(this.errorMessage);
-    return this.errorMessage.innerText();
+  async getArticleErrorMessage(): Promise<string[]> {
+    await this.waitForVisible(this.errorMessage.first());
+    return this.errorMessage.allInnerTexts();
   }
 
   async updateArticle(
