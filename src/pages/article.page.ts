@@ -41,7 +41,9 @@ export class ArticlePage extends BasePage {
     const response = await articleResponsePromise;
 
     if (response.status() !== 200) {
-      throw new Error(`Article request failed with status ${response.status()} for slug: ${slug}`);
+      const responseBodyText = await response.text();
+      throw new Error(`Article request failed with status ${response.status()} for slug: ${slug}
+      Response body: ${responseBodyText}`);
     }
   }
 
