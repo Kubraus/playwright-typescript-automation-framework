@@ -110,7 +110,7 @@ export class RealWorldFlow {
     await expect(this.articlePage.getCommentByText(comment)).toBeVisible();
   }
 
-  async getLoginErrorMessage(): Promise<string> {
+  async getLoginErrorMessage(): Promise<string[]> {
     return this.loginPage.getErrorMessage();
   }
 
@@ -123,7 +123,7 @@ export class RealWorldFlow {
   }
 
   async shouldSeeSignInButtonDisabled(): Promise<void> {
-    await expect(this.loginPage.getSignInButton()).toBeDisabled();
+    await this.loginPage.shouldSignInButtonBeDisabled();
   }
 
   async openSignUpPage(): Promise<void> {
@@ -147,7 +147,7 @@ export class RealWorldFlow {
   }
 
   async shouldSeeSignUpButtonDisabled(): Promise<void> {
-    await expect(this.signUpPage.getSignUpButton()).toBeDisabled();
+    await this.signUpPage.shouldSignUpButtonBeDisabled();
   }
 
   async fillArticleTitle(title: string): Promise<void> {

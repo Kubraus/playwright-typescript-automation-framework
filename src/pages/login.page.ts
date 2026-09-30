@@ -27,8 +27,8 @@ export class LoginPage extends BasePage {
     await this.fill(this.passwordInput, password);
   }
 
-  getSignInButton(): Locator {
-    return this.signInButton;
+  async shouldSignInButtonBeDisabled(): Promise<void> {
+    await expect(this.signInButton).toBeDisabled();
   }
 
   async login(email: string, password: string): Promise<void> {
@@ -37,9 +37,9 @@ export class LoginPage extends BasePage {
     await this.click(this.signInButton);
   }
 
-  async getErrorMessage(): Promise<string> {
-    await this.waitForVisible(this.errorMessage);
-    return this.errorMessage.innerText();
+  async getErrorMessage(): Promise<string[]> {
+    await this.waitForVisible(this.errorMessage.first());
+    return this.errorMessage.allInnerTexts();
   }
 
   async shouldBeOnLoginPage(): Promise<void> {

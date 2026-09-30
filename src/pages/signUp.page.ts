@@ -31,8 +31,8 @@ export class SignUpPage extends BasePage {
     await this.fill(this.passwordInput, password);
   }
 
-  getSignUpButton(): Locator {
-    return this.signUpButton;
+  async shouldSignUpButtonBeDisabled(): Promise<void> {
+    await expect(this.signUpButton).toBeDisabled();
   }
 
   async register(username: string, email: string, password: string): Promise<void> {
