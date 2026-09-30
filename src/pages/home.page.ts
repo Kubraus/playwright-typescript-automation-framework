@@ -70,7 +70,7 @@ export class HomePage extends BasePage {
   }
 
   getAuthorName(): Promise<string> {
-    return this.authorName.innerText();
+    return this.getText(this.authorName);
   }
 
   async getFirstArticleTitle(): Promise<string> {

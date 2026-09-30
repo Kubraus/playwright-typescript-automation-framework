@@ -25,10 +25,10 @@ export class EditorPage extends BasePage {
     articleBody: string,
     tags: string,
   ): Promise<void> {
-    await this.clearAndFill(this.titleInput, title);
-    await this.clearAndFill(this.descriptionInput, description);
-    await this.clearAndFill(this.articleBody, articleBody);
-    await this.clearAndFill(this.enterTagsInput, tags);
+    await this.fill(this.titleInput, title);
+    await this.fill(this.descriptionInput, description);
+    await this.fill(this.articleBody, articleBody);
+    await this.fill(this.enterTagsInput, tags);
     const createArticleResponsePromise = this.page.waitForResponse(
       (response) =>
         response.url().includes('/articles') &&
@@ -40,19 +40,19 @@ export class EditorPage extends BasePage {
   }
 
   async fillTitleInput(title: string): Promise<void> {
-    await this.clearAndFill(this.titleInput, title);
+    await this.fill(this.titleInput, title);
   }
 
   async fillDescriptionInput(description: string): Promise<void> {
-    await this.clearAndFill(this.descriptionInput, description);
+    await this.fill(this.descriptionInput, description);
   }
 
   async fillArticleBodyInput(articleBody: string): Promise<void> {
-    await this.clearAndFill(this.articleBody, articleBody);
+    await this.fill(this.articleBody, articleBody);
   }
 
   async fillTagsInput(tags: string): Promise<void> {
-    await this.clearAndFill(this.enterTagsInput, tags);
+    await this.fill(this.enterTagsInput, tags);
   }
 
   async clickPublishButton(): Promise<void> {
