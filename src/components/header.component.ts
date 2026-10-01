@@ -19,11 +19,11 @@ export class HeaderComponent extends BasePage {
     return this.newArticleLink;
   }
 
-  async clickOnNewArticleLink(): Promise<void> {
+  async clickNewArticleLink(): Promise<void> {
     await this.click(this.newArticleLink);
   }
 
-  async clickOnSettingsLink(): Promise<void> {
+  async clickSettingsLink(): Promise<void> {
     await this.click(this.settingsLink);
   }
 }

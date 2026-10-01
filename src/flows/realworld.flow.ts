@@ -57,7 +57,7 @@ export class RealWorldFlow {
   }
 
   async openNewArticleEditor(): Promise<void> {
-    await this.headerComponent.clickOnNewArticleLink();
+    await this.headerComponent.clickNewArticleLink();
   }
 
   async createArticle(
@@ -299,7 +299,7 @@ export class RealWorldFlow {
   }
 
   async openSettingsPage(): Promise<void> {
-    await this.headerComponent.clickOnSettingsLink();
+    await this.headerComponent.clickSettingsLink();
   }
 
   async shouldSeeLogoutButton(): Promise<void> {
