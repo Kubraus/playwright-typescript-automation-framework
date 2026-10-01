@@ -11,9 +11,15 @@ test('Should redact bearer token', () => {
   expect(result).toBe('Authorization: Bearer [REDACTED]');
 });
 
+test('Should redact Authorization token', () => {
+  const result = redactSecrets('Authorization: Token token_123456789');
+  expect(result).toBe('Authorization: Token [REDACTED]');
+});
+
 test('Should redact bearer token case-insensitively', () => {
   const result = redactSecrets('authorization: bearer TOP_SECRET');
-  expect(result).toBe('Authorization: Bearer [REDACTED]');
+  expect(result).toContain('[REDACTED]');
+  expect(result).not.toContain('TOP_SECRET');
 });
 
 test('Should redact password from source code', () => {

@@ -1,10 +1,10 @@
 export function redactSecrets(value: string): string {
   let redacted = value;
 
-  // Redacts Bearer tokens from Authorization headers.
+  // Redacts tokens from Authorization headers.
   redacted = redacted.replace(
-    /Authorization:\s+Bearer\s+\S+/gi,
-    'Authorization: Bearer [REDACTED]',
+    /Authorization:\s+(Bearer|Token)\s+\S+/gi,
+    'Authorization: $1 [REDACTED]',
   );
 
   // Redacts passwords stored as quoted values in source code.
