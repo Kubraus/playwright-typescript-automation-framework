@@ -55,7 +55,7 @@ export class ProfilePage extends BasePage {
     return this.favoritedPostsTab;
   }
 
-  getArticleTitleLocator(title: string): Locator {
+  getArticleTitle(title: string): Locator {
     return this.articlesList.getByRole('heading', { name: title });
   }
 

@@ -192,7 +192,7 @@ export class RealWorldFlow {
   }
 
   async shouldArticlesListNotBeEmpty(): Promise<void> {
-    await expect.poll(async () => this.profilePage.getArticlesList().count()).toBeGreaterThan(0);
+    await expect.poll(() => this.profilePage.getArticlesList().count()).toBeGreaterThan(0);
   }
 
   async clickFollowButton(): Promise<void> {
@@ -225,11 +225,11 @@ export class RealWorldFlow {
   }
 
   async shouldSeeArticleWithTitle(title: string): Promise<void> {
-    await expect(this.profilePage.getArticleTitleLocator(title)).toBeVisible();
+    await expect(this.profilePage.getArticleTitle(title)).toBeVisible();
   }
 
   async shouldNotSeeArticleWithTitle(title: string): Promise<void> {
-    await expect(this.profilePage.getArticleTitleLocator(title)).not.toBeVisible();
+    await expect(this.profilePage.getArticleTitle(title)).not.toBeVisible();
   }
 
   async clickFavoriteButtonOnTheFirstArticle(): Promise<void> {
