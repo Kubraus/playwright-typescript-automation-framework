@@ -19,7 +19,7 @@ export class EditorPage extends BasePage {
     this.errorMessage = page.locator('.error-messages li');
   }
 
-  async createArticle(
+  async submitArticleForm(
     title: string,
     description: string,
     articleBody: string,
@@ -29,13 +29,24 @@ export class EditorPage extends BasePage {
     await this.fill(this.descriptionInput, description);
     await this.fill(this.articleBody, articleBody);
     await this.fill(this.enterTagsInput, tags);
-    const createArticleResponsePromise = this.page.waitForResponse(
-      (response) =>
-        response.url().includes('/articles') &&
-        ['POST', 'PUT', 'PATCH'].includes(response.request().method()),
-    );
+    const submitArticleResponsePromise = this.page.waitForResponse((response) => {
+      const pathname = new URL(response.url()).pathname;
+      const segments = pathname.split('/').filter(Boolean);
+      const method = response.request().method();
+      const isCreate =
+        segments[0] === 'api' &&
+        segments[1] === 'articles' &&
+        segments.length === 2 &&
+        method === 'POST';
+      const isUpdate =
+        segments[0] === 'api' &&
+        segments[1] === 'articles' &&
+        segments.length === 3 &&
+        (method === 'PUT' || method === 'PATCH');
+      return isCreate || isUpdate;
+    });
     await this.click(this.publishButton);
-    await createArticleResponsePromise;
+    await submitArticleResponsePromise;
     await this.page.waitForURL(/\/article\//);
   }
 
@@ -62,15 +73,6 @@ export class EditorPage extends BasePage {
   async getArticleErrorMessage(): Promise<string[]> {
     await this.waitForVisible(this.errorMessage.first());
     return this.errorMessage.allInnerTexts();
-  }
-
-  async updateArticle(
-    title: string,
-    description: string,
-    articleBody: string,
-    tags: string,
-  ): Promise<void> {
-    await this.createArticle(title, description, articleBody, tags);
   }
 
   async shouldSeeTitleInputValue(title: string): Promise<void> {

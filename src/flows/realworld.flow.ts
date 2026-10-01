@@ -66,7 +66,7 @@ export class RealWorldFlow {
     articleBody: string,
     tags: string,
   ): Promise<void> {
-    await this.editorPage.createArticle(title, description, articleBody, tags);
+    await this.editorPage.submitArticleForm(title, description, articleBody, tags);
   }
 
   async shouldSeeArticle(title: string): Promise<void> {
@@ -87,7 +87,7 @@ export class RealWorldFlow {
     articleBody: string,
     tags: string,
   ): Promise<void> {
-    await this.editorPage.updateArticle(title, description, articleBody, tags);
+    await this.editorPage.submitArticleForm(title, description, articleBody, tags);
   }
 
   async deleteArticle(): Promise<void> {
