@@ -41,14 +41,6 @@ export class HomePage extends BasePage {
     await this.page.goto('/');
   }
 
-  async clickSignIn(): Promise<void> {
-    await this.click(this.signIn);
-  }
-
-  async clickSignUp(): Promise<void> {
-    await this.click(this.signUp);
-  }
-
   getNavbarBrand(): Locator {
     return this.navbarBrand;
   }
@@ -73,8 +65,8 @@ export class HomePage extends BasePage {
     return this.getText(this.authorName);
   }
 
-  async getFirstArticleTitle(): Promise<string> {
-    return await this.getText(this.firstArticleTitle);
+  getFirstArticleTitle(): Promise<string> {
+    return this.getText(this.firstArticleTitle);
   }
 
   async clickFirstArticleFavoriteButton(): Promise<void> {
