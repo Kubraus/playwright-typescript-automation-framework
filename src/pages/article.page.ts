@@ -33,8 +33,15 @@ export class ArticlePage extends BasePage {
 
   async openArticleBySlug(slug: string): Promise<void> {
     const articleResponsePromise = this.page.waitForResponse((response) => {
+      const pathname = new URL(response.url()).pathname;
+      const segments = pathname.split('/').filter(Boolean);
+      const method = response.request().method();
       return (
-        response.url().includes(`/api/articles/${slug}`) && response.request().method() === 'GET'
+        segments[0] === 'api' &&
+        segments[1] === 'articles' &&
+        segments[2] === slug &&
+        segments.length === 3 &&
+        method === 'GET'
       );
     });
     await this.page.goto(`/article/${slug}`);
@@ -48,7 +55,12 @@ export class ArticlePage extends BasePage {
   }
 
   async getCurrentSlug(): Promise<string> {
-    return this.page.url().split('/').pop()!;
+    const pathname = new URL(this.page.url()).pathname;
+    const segments = pathname.split('/').filter(Boolean);
+    if (segments[0] !== 'article' || segments.length !== 2) {
+      throw new Error(`Unable to extract article slug from URL: ${this.page.url()}`);
+    }
+    return segments[1];
   }
 
   async addComment(comment: string): Promise<void> {
