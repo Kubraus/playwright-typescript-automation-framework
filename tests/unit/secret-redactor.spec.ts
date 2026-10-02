@@ -32,6 +32,16 @@ test('Should redact password from JSON', () => {
   expect(result).toBe('{"username":"Jacob","password":"[REDACTED]"}');
 });
 
+test('Should redact double-quoted password from source code', () => {
+  const result = redactSecrets(`const password = "secret123";`);
+  expect(result).toBe('const password = "[REDACTED]";');
+});
+
+test('Should redact backtick-quoted password from source code', () => {
+  const result = redactSecrets('const password = `secret123`;');
+  expect(result).toBe('const password = `[REDACTED]`;');
+});
+
 test('Should remove ANSI codes', () => {
   const result = removeAnsiCodes('\x1B[31mExpected\x1B[39m');
   expect(result).toBe('Expected');

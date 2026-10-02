@@ -8,10 +8,10 @@ export function redactSecrets(value: string): string {
   );
 
   // Redacts passwords stored as quoted values in source code.
-  redacted = redacted.replace(/(password\s*=\s*)'[^']+'/gi, "$1'[REDACTED]'");
+  redacted = redacted.replace(/(password\s*=\s*)(['"`])[^'"`]+\2/gi, '$1$2[REDACTED]$2');
 
   // Redacts unquoted password values in key-value format.
-  redacted = redacted.replace(/(password\s*=\s*)[^'"\s]+/gi, '$1[REDACTED]');
+  redacted = redacted.replace(/(password\s*=\s*)[^'"`\s]+/gi, '$1[REDACTED]');
 
   // Redacts passwords stored as JSON values.
   redacted = redacted.replace(/("password"\s*:\s*)"[^"]+"/gi, '$1"[REDACTED]"');

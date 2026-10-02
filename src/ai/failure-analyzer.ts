@@ -9,10 +9,10 @@ interface FailureContext {
 }
 
 export async function analyzeFailure(context: FailureContext): Promise<string | undefined> {
-  const safeTestName = redactSecrets(context.testName);
+  const safeTestName = redactSecrets(removeAnsiCodes(context.testName));
   const safeErrorMessage = redactSecrets(removeAnsiCodes(context.errorMessage));
   const safeStackTrace = redactSecrets(removeAnsiCodes(context.stackTrace ?? 'Not available'));
-  const safeSourceCode = redactSecrets(context.sourceCode ?? 'Not available');
+  const safeSourceCode = redactSecrets(removeAnsiCodes(context.sourceCode ?? 'Not available'));
   const prompt = `
   Analyze this Playwright test failure.
   Base your analysis solely on the evidence provided. Do not invent code, locators, or application behavior that is not supported by the evidence provided.
