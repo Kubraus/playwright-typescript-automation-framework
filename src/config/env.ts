@@ -5,8 +5,12 @@ const baseURL = process.env.BASE_URL;
 const apiURL = process.env.API_URL;
 const openaiApiKey = process.env.OPENAI_API_KEY;
 
-if (!baseURL || !apiURL) {
-  throw new Error('BASE_URL or API_URL must be provided');
+if (!baseURL) {
+  throw new Error('BASE_URL must be provided');
+}
+
+if (!apiURL) {
+  throw new Error('API_URL must be provided');
 }
 
 export const env = {
