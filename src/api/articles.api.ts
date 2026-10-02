@@ -5,15 +5,19 @@ import { Article, ArticleResponse } from '../types/article.types';
 export class ArticlesApi {
   constructor(private readonly request: APIRequestContext) {}
 
-  async createArticle(
+  private getAuthHeaders(token?: string): Record<string, string> {
+    return token ? { Authorization: `Token ${token}` } : {};
+  }
+
+  createArticle(
     title: string,
     description: string,
     body: string,
     tagList: string[],
     token?: string,
   ): Promise<APIResponse> {
-    const headers: { [key: string]: string } = token ? { Authorization: `Token ${token}` } : {};
-    return await this.request.post(`${env.API_URL}/articles`, {
+    const headers = this.getAuthHeaders(token);
+    return this.request.post(`${env.API_URL}/articles`, {
       data: {
         article: {
           title,
@@ -26,7 +30,7 @@ export class ArticlesApi {
     });
   }
 
-  async updateArticle(
+  updateArticle(
     slug: string,
     title: string,
     description: string,
@@ -34,8 +38,8 @@ export class ArticlesApi {
     tagList: string[],
     token?: string,
   ): Promise<APIResponse> {
-    const headers: { [key: string]: string } = token ? { Authorization: `Token ${token}` } : {};
-    return await this.request.put(`${env.API_URL}/articles/${slug}`, {
+    const headers = this.getAuthHeaders(token);
+    return this.request.put(`${env.API_URL}/articles/${slug}`, {
       data: {
         article: {
           title,
@@ -78,18 +82,16 @@ export class ArticlesApi {
       .toBe(200);
   }
 
-  async deleteArticle(slug: string, token?: string): Promise<APIResponse> {
-    const headers: { [key: string]: string } = token ? { Authorization: `Token ${token}` } : {};
-    return await this.request.delete(`${env.API_URL}/articles/${slug}`, {
+  deleteArticle(slug: string, token?: string): Promise<APIResponse> {
+    const headers = this.getAuthHeaders(token);
+    return this.request.delete(`${env.API_URL}/articles/${slug}`, {
       headers,
     });
   }
 
-  async getArticle(slug: string, token: string): Promise<APIResponse> {
-    return await this.request.get(`${env.API_URL}/articles/${slug}`, {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
+  getArticle(slug: string, token: string): Promise<APIResponse> {
+    return this.request.get(`${env.API_URL}/articles/${slug}`, {
+      headers: this.getAuthHeaders(token),
     });
   }
 
@@ -100,11 +102,9 @@ export class ArticlesApi {
     return responseBody.article;
   }
 
-  async favoriteArticle(slug: string, token: string): Promise<APIResponse> {
-    return await this.request.post(`${env.API_URL}/articles/${slug}/favorite`, {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
+  favoriteArticle(slug: string, token: string): Promise<APIResponse> {
+    return this.request.post(`${env.API_URL}/articles/${slug}/favorite`, {
+      headers: this.getAuthHeaders(token),
     });
   }
 
