@@ -98,7 +98,7 @@ export class RealWorldFlow {
     await this.articlePage.openArticleBySlug(slug);
   }
 
-  async getCurrentArticleSlug(): Promise<string> {
+  getCurrentArticleSlug(): Promise<string> {
     return this.articlePage.getCurrentSlug();
   }
 
@@ -110,7 +110,7 @@ export class RealWorldFlow {
     await expect(this.articlePage.getCommentByText(comment)).toBeVisible();
   }
 
-  async getLoginErrorMessage(): Promise<string[]> {
+  getLoginErrorMessage(): Promise<string[]> {
     return this.loginPage.getErrorMessage();
   }
 
@@ -170,11 +170,11 @@ export class RealWorldFlow {
     await this.editorPage.clickPublishButton();
   }
 
-  async getArticleErrorMessage(): Promise<string[]> {
+  getArticleErrorMessage(): Promise<string[]> {
     return this.editorPage.getArticleErrorMessage();
   }
 
-  async getFirstAuthorName(): Promise<string> {
+  getFirstAuthorName(): Promise<string> {
     return this.homePage.getAuthorName();
   }
 
@@ -236,7 +236,7 @@ export class RealWorldFlow {
     await this.homePage.clickFirstArticleFavoriteButton();
   }
 
-  async getFirstArticleTitle(): Promise<string> {
+  getFirstArticleTitle(): Promise<string> {
     return this.homePage.getFirstArticleTitle();
   }
 
@@ -252,20 +252,20 @@ export class RealWorldFlow {
     await expect(this.homePage.getFirstArticleFavoriteButton()).toHaveClass(/btn-outline-primary/);
   }
 
-  async deleteComment(comment: string): Promise<void> {
-    await this.articlePage.deleteComment(comment);
+  deleteComment(comment: string): Promise<void> {
+    return this.articlePage.deleteComment(comment);
   }
 
   async shouldNotSeeComment(comment: string): Promise<void> {
     await expect(this.articlePage.getCommentByText(comment)).not.toBeVisible();
   }
 
-  async openFirstArticle(): Promise<void> {
-    await this.homePage.clickFirstArticleTitle();
+  openFirstArticle(): Promise<void> {
+    return this.homePage.clickFirstArticleTitle();
   }
 
-  async shouldSeeSignUpPage(): Promise<void> {
-    await this.signUpPage.shouldBeOnSignUpPage();
+  shouldSeeSignUpPage(): Promise<void> {
+    return this.signUpPage.shouldBeOnSignUpPage();
   }
 
   async shouldSeeGlobalFeedTab(): Promise<void> {
@@ -284,18 +284,16 @@ export class RealWorldFlow {
     await expect(this.homePage.getYourFeedTab()).toHaveClass(/active/);
   }
 
-  async openYourFeedTab(): Promise<void> {
-    await this.homePage.clickYourFeedTab();
+  openYourFeedTab(): Promise<void> {
+    return this.homePage.clickYourFeedTab();
   }
 
-  async openGlobalFeedTab(): Promise<void> {
-    await this.homePage.clickGlobalFeedTab();
+  openGlobalFeedTab(): Promise<void> {
+    return this.homePage.clickGlobalFeedTab();
   }
 
   async shouldGlobalFeedArticlesNotBeEmpty(): Promise<void> {
-    await expect
-      .poll(async () => this.homePage.getGlobalFeedArticlesList().count())
-      .toBeGreaterThan(0);
+    await expect.poll(() => this.homePage.getGlobalFeedArticlesList().count()).toBeGreaterThan(0);
   }
 
   async openSettingsPage(): Promise<void> {
