@@ -14,13 +14,14 @@ It was created as a portfolio project to demonstrate my approach to designing a 
 
 I created this project to deepen my knowledge of Playwright and TypeScript by designing and implementing a complete automation framework.
 
-My goal was not only to automate tests, but also to apply software engineering principles such as modular architecture, maintainability, and code reusability.
+The goal was to build something closer to a real-world automation framework used in a professional project than a collection of demo tests.
 
 ## Features
 
 | Feature                    | Purpose                                                                        |
 | -------------------------- | ------------------------------------------------------------------------------ |
 | UI Testing                 | Automates end-to-end browser scenarios using Playwright                        |
+| Cross-Browser Testing      | Runs UI tests across Chromium, Firefox, and WebKit                             |
 | API Testing                | Validates REST API endpoints independently from the UI                         |
 | Business Flows             | Combines API and UI interactions into reusable business scenarios              |
 | Page Object Model          | Encapsulates page elements and user interactions                               |
@@ -146,7 +147,7 @@ cd playwright-typescript-automation-framework
 Install project dependencies:
 
 ```bash
-npm install
+npm ci
 ```
 
 Install Playwright browsers:
@@ -181,18 +182,33 @@ Environment files and API keys must not be committed to the repository. In CI, t
 
 ## Available Scripts
 
-| Command               | Description                                                 |
-| --------------------- | ----------------------------------------------------------- |
-| `npm test`            | Runs the complete Playwright test suite.                    |
-| `npm run test:headed` | Runs tests in headed mode.                                  |
-| `npm run test:api`    | Runs API tests only.                                        |
-| `npm run test:all`    | Runs all tests using a single worker for maximum stability. |
-| `npm run test:debug`  | Runs tests in Playwright Inspector.                         |
-| `npm run report`      | Opens the Playwright HTML report.                           |
-| `npm run lint`        | Runs ESLint.                                                |
-| `npm run format`      | Formats the project using Prettier.                         |
-| `npm run typecheck`   | Runs TypeScript type checking.                              |
-| `npm run check`       | Formats, lints, and type-checks the project.                |
+| Command                   | Description                                             |
+| ------------------------- | ------------------------------------------------------- |
+| `npm test`                | Runs the complete Playwright test suite.                |
+| `npm run test:headed`     | Runs tests in headed mode.                              |
+| `npm run test:api`        | Runs API tests only.                                    |
+| `npm run test:smoke`      | Runs tests tagged with `@smoke`.                        |
+| `npm run test:regression` | Runs the complete regression test suite.                |
+| `npm run test:stable`     | Runs tests using a single worker for maximum stability. |
+| `npm run test:debug`      | Runs tests in Playwright Inspector.                     |
+| `npm run report`          | Opens the Playwright HTML report.                       |
+| `npm run lint`            | Runs ESLint.                                            |
+| `npm run format`          | Formats the project using Prettier.                     |
+| `npm run typecheck`       | Runs TypeScript type checking.                          |
+| `npm run check`           | Formats, lints, and type-checks the project.            |
+| `npm run build`           | Compiles the TypeScript project.                        |
+
+### Running Tests in a Specific Browser
+
+UI tests can be executed against a specific browser project:
+
+```bash
+npx playwright test --project=chromium
+npx playwright test --project=firefox
+npx playwright test --project=webkit
+```
+
+API and unit tests run only in the Chromium project to avoid duplicating browser-independent tests across projects.
 
 ## Framework Architecture
 
@@ -431,9 +447,6 @@ Some of the most important lessons learned include:
 
 Planned improvements include:
 
-- Cross-browser execution using Chromium, Firefox, and WebKit.
-- Cross-browser execution in CI pipelines.
-- Improved multi-project support for reporter retry handling.
 - Multi-provider AI architecture with support for additional AI providers such as Anthropic Claude.
 - Extended secret redaction for additional credential and token formats.
 - Additional unit tests for AI analyzer components.

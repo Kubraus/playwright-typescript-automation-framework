@@ -30,6 +30,7 @@ export class EditorPage extends BasePage {
     await this.fill(this.articleBody, articleBody);
     await this.fill(this.enterTagsInput, tags);
     const submitArticleResponsePromise = this.page.waitForResponse((response) => {
+      // Check the exact path structure to avoid matching other endpoints that start with /api/articles.
       const pathname = new URL(response.url()).pathname;
       const segments = pathname.split('/').filter(Boolean);
       const method = response.request().method();

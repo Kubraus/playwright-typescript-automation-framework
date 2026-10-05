@@ -7,7 +7,7 @@ export function redactSecrets(value: string): string {
     'Authorization: $1 [REDACTED]',
   );
 
-  // Redacts passwords stored as quoted values in source code.
+  // Captures the opening quote type and uses \2 to require the same quote type at the end.
   redacted = redacted.replace(/(password\s*=\s*)(['"`])[^'"`]+\2/gi, '$1$2[REDACTED]$2');
 
   // Redacts unquoted password values in key-value format.
