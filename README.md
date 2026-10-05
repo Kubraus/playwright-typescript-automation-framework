@@ -163,9 +163,8 @@ The framework is now ready to use.
 Create a `.env` file in the project root.
 
 ```env
-BASE_URL=https://conduit-realworld-example-app.fly.dev
-API_URL=https://conduit-api.fly.dev
-
+BASE_URL=https://demo.realworld.show
+API_URL=https://api.realworld.show/api
 # Optional - required only for AI failure analysis
 OPENAI_API_KEY=your_openai_api_key
 ```
