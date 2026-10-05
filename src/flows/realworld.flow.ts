@@ -4,6 +4,9 @@ import { LoginPage } from '../pages/login.page';
 import { HeaderComponent } from '../components/header.component';
 import { EditorPage } from '../pages/editor.page';
 import { ArticlePage } from '../pages/article.page';
+import { SignUpPage } from '../pages/signUp.page';
+import { ProfilePage } from '../pages/profile.page';
+import { SettingsPage } from '../pages/settings.page';
 
 export class RealWorldFlow {
   constructor(
@@ -12,6 +15,9 @@ export class RealWorldFlow {
     private readonly headerComponent: HeaderComponent,
     private readonly editorPage: EditorPage,
     private readonly articlePage: ArticlePage,
+    private readonly signUpPage: SignUpPage,
+    private readonly profilePage: ProfilePage,
+    private readonly settingsPage: SettingsPage,
   ) {}
 
   async openHomePage(): Promise<void> {
@@ -51,7 +57,7 @@ export class RealWorldFlow {
   }
 
   async openNewArticleEditor(): Promise<void> {
-    await this.headerComponent.clickOnNewArticleLink();
+    await this.headerComponent.clickNewArticleLink();
   }
 
   async createArticle(
@@ -60,7 +66,7 @@ export class RealWorldFlow {
     articleBody: string,
     tags: string,
   ): Promise<void> {
-    await this.editorPage.createArticle(title, description, articleBody, tags);
+    await this.editorPage.submitArticleForm(title, description, articleBody, tags);
   }
 
   async shouldSeeArticle(title: string): Promise<void> {
@@ -81,7 +87,7 @@ export class RealWorldFlow {
     articleBody: string,
     tags: string,
   ): Promise<void> {
-    await this.editorPage.updateArticle(title, description, articleBody, tags);
+    await this.editorPage.submitArticleForm(title, description, articleBody, tags);
   }
 
   async deleteArticle(): Promise<void> {
@@ -92,7 +98,7 @@ export class RealWorldFlow {
     await this.articlePage.openArticleBySlug(slug);
   }
 
-  async getCurrentArticleSlug(): Promise<string> {
+  getCurrentArticleSlug(): Promise<string> {
     return this.articlePage.getCurrentSlug();
   }
 
@@ -101,6 +107,204 @@ export class RealWorldFlow {
   }
 
   async shouldSeeComment(comment: string): Promise<void> {
-    await expect(this.articlePage.getCommentText()).toContainText(comment);
+    await expect(this.articlePage.getCommentByText(comment)).toBeVisible();
+  }
+
+  getLoginErrorMessage(): Promise<string[]> {
+    return this.loginPage.getErrorMessage();
+  }
+
+  async enterLoginEmail(email: string): Promise<void> {
+    await this.loginPage.fillEmail(email);
+  }
+
+  async enterLoginPassword(password: string): Promise<void> {
+    await this.loginPage.fillPassword(password);
+  }
+
+  async shouldSeeSignInButtonDisabled(): Promise<void> {
+    await this.loginPage.shouldSignInButtonBeDisabled();
+  }
+
+  async openSignUpPage(): Promise<void> {
+    await this.signUpPage.openSignUpPage();
+  }
+
+  async register(username: string, email: string, password: string): Promise<void> {
+    await this.signUpPage.register(username, email, password);
+  }
+
+  async fillSignUpUsername(username: string): Promise<void> {
+    await this.signUpPage.fillUsername(username);
+  }
+
+  async fillSignUpEmail(email: string): Promise<void> {
+    await this.signUpPage.fillEmail(email);
+  }
+
+  async fillSignUpPassword(password: string): Promise<void> {
+    await this.signUpPage.fillPassword(password);
+  }
+
+  async shouldSeeSignUpButtonDisabled(): Promise<void> {
+    await this.signUpPage.shouldSignUpButtonBeDisabled();
+  }
+
+  async fillArticleTitle(title: string): Promise<void> {
+    await this.editorPage.fillTitleInput(title);
+  }
+
+  async fillArticleDescription(description: string): Promise<void> {
+    await this.editorPage.fillDescriptionInput(description);
+  }
+
+  async fillArticleBody(articleBody: string): Promise<void> {
+    await this.editorPage.fillArticleBodyInput(articleBody);
+  }
+
+  async fillArticleTags(articleTags: string): Promise<void> {
+    await this.editorPage.fillTagsInput(articleTags);
+  }
+
+  async submitPublishArticle(): Promise<void> {
+    await this.editorPage.clickPublishButton();
+  }
+
+  getArticleErrorMessage(): Promise<string[]> {
+    return this.editorPage.getArticleErrorMessage();
+  }
+
+  getFirstAuthorName(): Promise<string> {
+    return this.homePage.getAuthorName();
+  }
+
+  async openFirstAuthorProfile(): Promise<void> {
+    await this.homePage.clickFirstAuthor();
+  }
+
+  async shouldSeeProfileAuthorName(expectedName: string): Promise<void> {
+    await expect(this.profilePage.getAuthorName()).toHaveText(expectedName);
+  }
+
+  async shouldSeeMyPostsTab(): Promise<void> {
+    await expect(this.profilePage.getMyPostsTab()).toBeVisible();
+    await expect(this.profilePage.getMyPostsTab()).toHaveClass(/active/);
+  }
+
+  async shouldArticlesListNotBeEmpty(): Promise<void> {
+    await expect.poll(() => this.profilePage.getArticlesList().count()).toBeGreaterThan(0);
+  }
+
+  async clickFollowButton(): Promise<void> {
+    await this.profilePage.clickFollow();
+  }
+
+  async clickUnfollowButton(): Promise<void> {
+    await this.profilePage.clickUnfollow();
+  }
+
+  async shouldSeeUnfollowButton(authorName: string): Promise<void> {
+    await expect(this.profilePage.getUnfollowButton()).toHaveText(`Unfollow ${authorName}`);
+  }
+
+  async shouldSeeFollowButton(authorName: string): Promise<void> {
+    await expect(this.profilePage.getFollowButton()).toHaveText(`Follow ${authorName}`);
+  }
+
+  async shouldSeeLoginPage(): Promise<void> {
+    await this.loginPage.shouldBeOnLoginPage();
+  }
+
+  async openFavoritedPosts(): Promise<void> {
+    await this.profilePage.clickFavoritedPostsTab();
+  }
+
+  async shouldSeeFavoritedPostsTab(): Promise<void> {
+    await expect(this.profilePage.getFavoritedPostsTab()).toBeVisible();
+    await expect(this.profilePage.getFavoritedPostsTab()).toHaveClass(/active/);
+  }
+
+  async shouldSeeArticleWithTitle(title: string): Promise<void> {
+    await expect(this.profilePage.getArticleTitle(title)).toBeVisible();
+  }
+
+  async shouldNotSeeArticleWithTitle(title: string): Promise<void> {
+    await expect(this.profilePage.getArticleTitle(title)).not.toBeVisible();
+  }
+
+  async clickFavoriteButtonOnTheFirstArticle(): Promise<void> {
+    await this.homePage.clickFirstArticleFavoriteButton();
+  }
+
+  getFirstArticleTitle(): Promise<string> {
+    return this.homePage.getFirstArticleTitle();
+  }
+
+  async openUserProfile(username: string): Promise<void> {
+    await this.profilePage.openProfile(username);
+  }
+
+  async shouldFirstArticleBeFavorited(): Promise<void> {
+    await expect(this.homePage.getFirstArticleFavoriteButton()).toHaveClass(/btn-primary/);
+  }
+
+  async shouldFirstArticleNotBeFavorited(): Promise<void> {
+    await expect(this.homePage.getFirstArticleFavoriteButton()).toHaveClass(/btn-outline-primary/);
+  }
+
+  deleteComment(comment: string): Promise<void> {
+    return this.articlePage.deleteComment(comment);
+  }
+
+  async shouldNotSeeComment(comment: string): Promise<void> {
+    await expect(this.articlePage.getCommentByText(comment)).not.toBeVisible();
+  }
+
+  openFirstArticle(): Promise<void> {
+    return this.homePage.clickFirstArticleTitle();
+  }
+
+  shouldSeeSignUpPage(): Promise<void> {
+    return this.signUpPage.shouldBeOnSignUpPage();
+  }
+
+  async shouldSeeGlobalFeedTab(): Promise<void> {
+    await expect(this.homePage.getGlobalFeedTab()).toBeVisible();
+  }
+
+  async shouldSeeYourFeedTab(): Promise<void> {
+    await expect(this.homePage.getYourFeedTab()).toBeVisible();
+  }
+
+  async shouldGlobalFeedTabBeActive(): Promise<void> {
+    await expect(this.homePage.getGlobalFeedTab()).toHaveClass(/active/);
+  }
+
+  async shouldYourFeedTabBeActive(): Promise<void> {
+    await expect(this.homePage.getYourFeedTab()).toHaveClass(/active/);
+  }
+
+  openYourFeedTab(): Promise<void> {
+    return this.homePage.clickYourFeedTab();
+  }
+
+  openGlobalFeedTab(): Promise<void> {
+    return this.homePage.clickGlobalFeedTab();
+  }
+
+  async shouldGlobalFeedArticlesNotBeEmpty(): Promise<void> {
+    await expect.poll(() => this.homePage.getGlobalFeedArticlesList().count()).toBeGreaterThan(0);
+  }
+
+  async openSettingsPage(): Promise<void> {
+    await this.headerComponent.clickSettingsLink();
+  }
+
+  async shouldSeeLogoutButton(): Promise<void> {
+    await expect(this.settingsPage.getLogoutButton()).toBeVisible();
+  }
+
+  async logout(): Promise<void> {
+    await this.settingsPage.clickLogout();
   }
 }

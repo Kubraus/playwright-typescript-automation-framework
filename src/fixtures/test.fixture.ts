@@ -8,19 +8,28 @@ import { ArticlePage } from '../pages/article.page';
 import { UsersApi } from '../api/users.api';
 import { generateUserData } from '../test-data/user.data';
 import { ApiUser } from '../types/api-user.types';
+import { SignUpPage } from '../pages/signUp.page';
+import { ProfilePage } from '../pages/profile.page';
+import { SettingsPage } from '../pages/settings.page';
+import { ArticlesApi } from '../api/articles.api';
 
 export { expect } from '@playwright/test';
 
-type Pages = {
+type TestFixtures = {
   homePage: HomePage;
   realWorld: RealWorldFlow;
   loginPage: LoginPage;
+  signUpPage: SignUpPage;
   headerComponent: HeaderComponent;
   editorPage: EditorPage;
   articlePage: ArticlePage;
   apiUser: ApiUser;
   authorUser: ApiUser;
   readerUser: ApiUser;
+  profilePage: ProfilePage;
+  settingsPage: SettingsPage;
+  articlesApi: ArticlesApi;
+  usersApi: UsersApi;
 };
 
 const createApiUser = async (request: APIRequestContext): Promise<ApiUser> => {
@@ -41,7 +50,7 @@ const createApiUser = async (request: APIRequestContext): Promise<ApiUser> => {
   };
 };
 
-export const test = base.extend<Pages>({
+export const test = base.extend<TestFixtures>({
   apiUser: async ({ request }, use) => {
     const apiUser = await createApiUser(request);
 
@@ -90,13 +99,58 @@ export const test = base.extend<Pages>({
     await use(articlePage);
   },
 
-  realWorld: async ({ homePage, loginPage, headerComponent, editorPage, articlePage }, use) => {
+  signUpPage: async ({ page }, use) => {
+    const signUpPage = new SignUpPage(page);
+
+    await use(signUpPage);
+  },
+
+  profilePage: async ({ page }, use) => {
+    const profilePage = new ProfilePage(page);
+
+    await use(profilePage);
+  },
+
+  settingsPage: async ({ page }, use) => {
+    const settingsPage = new SettingsPage(page);
+
+    await use(settingsPage);
+  },
+
+  articlesApi: async ({ request }, use) => {
+    const articlesApi = new ArticlesApi(request);
+
+    await use(articlesApi);
+  },
+
+  usersApi: async ({ request }, use) => {
+    const usersApi = new UsersApi(request);
+
+    await use(usersApi);
+  },
+
+  realWorld: async (
+    {
+      homePage,
+      loginPage,
+      headerComponent,
+      editorPage,
+      articlePage,
+      signUpPage,
+      profilePage,
+      settingsPage,
+    },
+    use,
+  ) => {
     const realWorld = new RealWorldFlow(
       homePage,
       loginPage,
       headerComponent,
       editorPage,
       articlePage,
+      signUpPage,
+      profilePage,
+      settingsPage,
     );
 
     await use(realWorld);

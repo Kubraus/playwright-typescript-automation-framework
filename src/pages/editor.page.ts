@@ -7,6 +7,7 @@ export class EditorPage extends BasePage {
   private readonly articleBody: Locator;
   private readonly enterTagsInput: Locator;
   private readonly publishButton: Locator;
+  private readonly errorMessage: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -15,35 +16,64 @@ export class EditorPage extends BasePage {
     this.articleBody = page.locator("textarea[name='body']");
     this.enterTagsInput = page.locator("input[placeholder='Enter tags']");
     this.publishButton = page.getByRole('button', { name: /Publish Article/i });
+    this.errorMessage = page.locator('.error-messages li');
   }
 
-  async createArticle(
+  async submitArticleForm(
     title: string,
     description: string,
     articleBody: string,
     tags: string,
   ): Promise<void> {
-    await this.clearAndFill(this.titleInput, title);
-    await this.clearAndFill(this.descriptionInput, description);
-    await this.clearAndFill(this.articleBody, articleBody);
-    await this.clearAndFill(this.enterTagsInput, tags);
-    const createArticleResponsePromise = this.page.waitForResponse(
-      (response) =>
-        response.url().includes('/articles') &&
-        ['POST', 'PUT', 'PATCH'].includes(response.request().method()),
-    );
+    await this.fill(this.titleInput, title);
+    await this.fill(this.descriptionInput, description);
+    await this.fill(this.articleBody, articleBody);
+    await this.fill(this.enterTagsInput, tags);
+    const submitArticleResponsePromise = this.page.waitForResponse((response) => {
+      // Check the exact path structure to avoid matching other endpoints that start with /api/articles.
+      const pathname = new URL(response.url()).pathname;
+      const segments = pathname.split('/').filter(Boolean);
+      const method = response.request().method();
+      const isCreate =
+        segments[0] === 'api' &&
+        segments[1] === 'articles' &&
+        segments.length === 2 &&
+        method === 'POST';
+      const isUpdate =
+        segments[0] === 'api' &&
+        segments[1] === 'articles' &&
+        segments.length === 3 &&
+        (method === 'PUT' || method === 'PATCH');
+      return isCreate || isUpdate;
+    });
     await this.click(this.publishButton);
-    await createArticleResponsePromise;
+    await submitArticleResponsePromise;
     await this.page.waitForURL(/\/article\//);
   }
 
-  async updateArticle(
-    title: string,
-    description: string,
-    articleBody: string,
-    tags: string,
-  ): Promise<void> {
-    await this.createArticle(title, description, articleBody, tags);
+  async fillTitleInput(title: string): Promise<void> {
+    await this.fill(this.titleInput, title);
+  }
+
+  async fillDescriptionInput(description: string): Promise<void> {
+    await this.fill(this.descriptionInput, description);
+  }
+
+  async fillArticleBodyInput(articleBody: string): Promise<void> {
+    await this.fill(this.articleBody, articleBody);
+  }
+
+  async fillTagsInput(tags: string): Promise<void> {
+    await this.fill(this.enterTagsInput, tags);
+  }
+
+  async clickPublishButton(): Promise<void> {
+    await this.click(this.publishButton);
+  }
+
+  async getArticleErrorMessage(): Promise<string[]> {
+    await this.waitForVisible(this.errorMessage.first());
+    return this.errorMessage.allInnerTexts();
   }
 
   async shouldSeeTitleInputValue(title: string): Promise<void> {

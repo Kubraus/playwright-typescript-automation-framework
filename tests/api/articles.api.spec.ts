@@ -1,8 +1,5 @@
-import { test, expect } from '@playwright/test';
-import { ArticlesApi } from '../../src/api/articles.api';
+import { test, expect } from '../../src/fixtures/test.fixture';
 import { generateArticleData } from '../../src/test-data/article.data';
-import { UsersApi } from '../../src/api/users.api';
-import { generateUserData } from '../../src/test-data/user.data';
 
 type ArticleData = ReturnType<typeof generateArticleData>;
 
@@ -34,23 +31,14 @@ const articleValidationCases = [
 ];
 
 test.describe('Article creation', () => {
-  test('Should create new article', async ({ request }) => {
-    const usersApi = new UsersApi(request);
-    const user = generateUserData();
+  test('Should create new article', async ({ articlesApi, apiUser }) => {
     const article = generateArticleData();
-    const articleApi = new ArticlesApi(request);
-    const token = await usersApi.registerUserAndReturnToken(
-      user.username,
-      user.email,
-      user.password,
-    );
-
-    const articleResponse = await articleApi.createArticle(
+    const articleResponse = await articlesApi.createArticle(
       article.title,
       article.description,
       article.articleBody,
       [article.tags],
-      token,
+      apiUser.token,
     );
     const articleResponseBody = await articleResponse.json();
     expect(articleResponse.status()).toBe(201);
@@ -61,11 +49,9 @@ test.describe('Article creation', () => {
     expect(articleResponseBody.article.tagList).toContain(article.tags);
   });
 
-  test('Should reject article creation without authentication', async ({ request }) => {
+  test('Should reject article creation without authentication', async ({ articlesApi }) => {
     const article = generateArticleData();
-    const articleApi = new ArticlesApi(request);
-
-    const articleResponse = await articleApi.createArticle(
+    const articleResponse = await articlesApi.createArticle(
       article.title,
       article.description,
       article.articleBody,
@@ -78,27 +64,20 @@ test.describe('Article creation', () => {
 
   for (const validationCase of articleValidationCases) {
     test(`Should reject article creation without article ${validationCase.field}`, async ({
-      request,
+      articlesApi,
+      apiUser,
     }) => {
-      const usersApi = new UsersApi(request);
-      const user = generateUserData();
       const article = generateArticleData();
-      const articleApi = new ArticlesApi(request);
       const invalidArticleData = validationCase.prepareData(article);
 
-      const token = await usersApi.registerUserAndReturnToken(
-        user.username,
-        user.email,
-        user.password,
-      );
-
-      const articleResponse = await articleApi.createArticle(
+      const articleResponse = await articlesApi.createArticle(
         invalidArticleData.title,
         invalidArticleData.description,
         invalidArticleData.body,
         [article.tags],
-        token,
+        apiUser.token,
       );
+
       expect(articleResponse.status()).toBe(422);
       const articleResponseBody = await articleResponse.json();
       expect(articleResponseBody.errors[validationCase.field]).toContain("can't be blank");
@@ -106,80 +85,106 @@ test.describe('Article creation', () => {
   }
 });
 
-test.describe('Article deletion', () => {
-  test('Delete article by API', async ({ request }) => {
-    const usersApi = new UsersApi(request);
-    const user = generateUserData();
+test.describe('Article update', () => {
+  test('Should update article by API', async ({ articlesApi, apiUser }) => {
     const article = generateArticleData();
-    const articleApi = new ArticlesApi(request);
+    const updateArticle = generateArticleData();
 
-    const token = await usersApi.registerUserAndReturnToken(
-      user.username,
-      user.email,
-      user.password,
-    );
-
-    const createdArticle = await articleApi.createArticleAndReturnData(
+    const createdArticle = await articlesApi.createArticleAndReturnData(
       article.title,
       article.description,
       article.articleBody,
       [article.tags],
-      token,
+      apiUser.token,
     );
-    const beforeDeleteResponse = await articleApi.getArticle(createdArticle.slug, token);
+
+    const slug = createdArticle.slug;
+
+    const response = await articlesApi.updateArticle(
+      slug,
+      updateArticle.title,
+      updateArticle.description,
+      updateArticle.articleBody,
+      [updateArticle.tags],
+      apiUser.token,
+    );
+
+    expect(response.status()).toBe(200);
+
+    const responseBody = await response.json();
+    expect(responseBody.article.title).toBe(updateArticle.title);
+    expect(responseBody.article.description).toBe(updateArticle.description);
+    expect(responseBody.article.body).toBe(updateArticle.articleBody);
+    expect(responseBody.article.tagList).toContain(updateArticle.tags);
+
+    const updatedSlug = responseBody.article.slug;
+    const getArticle = await articlesApi.getArticleAndReturnData(updatedSlug, apiUser.token);
+
+    expect(getArticle.title).toBe(updateArticle.title);
+
+    await articlesApi.deleteArticle(updatedSlug, apiUser.token);
+  });
+});
+
+test.describe('Article deletion', () => {
+  test('Delete article by API', async ({ articlesApi, apiUser }) => {
+    const article = generateArticleData();
+
+    const createdArticle = await articlesApi.createArticleAndReturnData(
+      article.title,
+      article.description,
+      article.articleBody,
+      [article.tags],
+      apiUser.token,
+    );
+
+    const beforeDeleteResponse = await articlesApi.getArticle(createdArticle.slug, apiUser.token);
     expect(beforeDeleteResponse.status()).toBe(200);
-
-    const deleteResponse = await articleApi.deleteArticle(createdArticle.slug, token);
+    const deleteResponse = await articlesApi.deleteArticle(createdArticle.slug, apiUser.token);
     expect(deleteResponse.status()).toBe(204);
-
-    const afterDeleteResponse = await articleApi.getArticle(createdArticle.slug, token);
+    const afterDeleteResponse = await articlesApi.getArticle(createdArticle.slug, apiUser.token);
     expect(afterDeleteResponse.status()).toBe(404);
   });
 
-  test('Should reject deleting article without authentication', async ({ request }) => {
-    const usersApi = new UsersApi(request);
-    const user = generateUserData();
+  test('Should reject deleting article without authentication', async ({
+    articlesApi,
+    apiUser,
+  }) => {
     const article = generateArticleData();
-    const articleApi = new ArticlesApi(request);
 
-    const token = await usersApi.registerUserAndReturnToken(
-      user.username,
-      user.email,
-      user.password,
-    );
-
-    const createdArticle = await articleApi.createArticleAndReturnData(
+    const createdArticle = await articlesApi.createArticleAndReturnData(
       article.title,
       article.description,
       article.articleBody,
       [article.tags],
-      token,
+      apiUser.token,
     );
-
-    const deleteResponse = await articleApi.deleteArticle(createdArticle.slug);
+    const deleteResponse = await articlesApi.deleteArticle(createdArticle.slug);
     expect(deleteResponse.status()).toBe(401);
     const deleteResponseBody = await deleteResponse.json();
     expect(deleteResponseBody.errors.token).toContain('is missing');
-
-    const getArticleResponse = await articleApi.getArticle(createdArticle.slug, token);
+    const getArticleResponse = await articlesApi.getArticle(createdArticle.slug, apiUser.token);
     expect(getArticleResponse.status()).toBe(200);
+    await articlesApi.deleteArticle(createdArticle.slug, apiUser.token);
   });
 
-  test('Should reject deleting non-existing article', async ({ request }) => {
-    const usersApi = new UsersApi(request);
-    const user = generateUserData();
-    const articleApi = new ArticlesApi(request);
-    const token = await usersApi.registerUserAndReturnToken(
-      user.username,
-      user.email,
-      user.password,
-    );
-    const deleteResponse = await articleApi.deleteArticle(
+  test('Should reject deleting non-existing article', async ({ articlesApi, apiUser }) => {
+    const deleteResponse = await articlesApi.deleteArticle(
       `non-existing-article-${Date.now()}`,
-      token,
+      apiUser.token,
     );
     expect(deleteResponse.status()).toBe(404);
     const deleteResponseBody = await deleteResponse.json();
     expect(deleteResponseBody.errors.article).toContain('not found');
+  });
+});
+
+test.describe('Article retrieval', () => {
+  test('Should return 404 for non-existing article', async ({ articlesApi, apiUser }) => {
+    const slug = `non-existing-article-${Date.now()}`;
+    const response = await articlesApi.getArticle(slug, apiUser.token);
+    expect(response.status()).toBe(404);
+    const responseBody = await response.json();
+    expect(responseBody.errors.article).toContain('not found');
   });
 });

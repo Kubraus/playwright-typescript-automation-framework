@@ -1,12 +1,12 @@
-import { APIRequestContext, expect } from '@playwright/test';
+import { APIRequestContext, APIResponse, expect } from '@playwright/test';
 import { env } from '../config/env';
 import { User, UserResponse } from '../types/user-response.types';
 
 export class UsersApi {
   constructor(private readonly request: APIRequestContext) {}
 
-  async registerUser(username: string, email: string, password: string) {
-    return await this.request.post(`${env.API_URL}/users`, {
+  registerUser(username: string, email: string, password: string): Promise<APIResponse> {
+    return this.request.post(`${env.API_URL}/users`, {
       data: {
         user: {
           username,
@@ -28,16 +28,14 @@ export class UsersApi {
     return responseBody.user;
   }
 
-  async registerUserAndReturnToken(
-    username: string,
-    email: string,
-    password: string,
-  ): Promise<string> {
-    const response = await this.registerUser(username, email, password);
-    await expect(response).toBeOK();
-    expect(response.status()).toBe(201);
-    const responseBody: UserResponse = await response.json();
-    expect(responseBody.user.token).toBeTruthy();
-    return responseBody.user.token;
+  loginUser(email: string, password: string): Promise<APIResponse> {
+    return this.request.post(`${env.API_URL}/users/login`, {
+      data: {
+        user: {
+          email,
+          password,
+        },
+      },
+    });
   }
 }
