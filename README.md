@@ -22,6 +22,7 @@ The goal was to build something closer to a real-world automation framework used
 | -------------------------- | ------------------------------------------------------------------------------ |
 | UI Testing                 | Automates end-to-end browser scenarios using Playwright                        |
 | Cross-Browser Testing      | Runs UI tests across Chromium, Firefox, and WebKit                             |
+| Multi-Tab Testing          | Validates new browser tabs using Playwright popup and browser context events   |
 | API Testing                | Validates REST API endpoints independently from the UI                         |
 | Business Flows             | Combines API and UI interactions into reusable business scenarios              |
 | Page Object Model          | Encapsulates page elements and user interactions                               |
@@ -276,6 +277,31 @@ Although the framework supports parallel execution, the public RealWorld applica
 
 For this reason, the default configuration uses a single worker to ensure stable and deterministic test execution.
 
+### Timeout Configuration
+
+The framework uses explicit timeout settings to control test execution and improve failure diagnostics:
+
+| Setting            | Value      | Purpose                                   |
+| ------------------ | ---------- | ----------------------------------------- |
+| Test timeout       | 30 seconds | Maximum duration of an individual test    |
+| Assertion timeout  | 5 seconds  | Maximum wait for an assertion to pass     |
+| Action timeout     | 10 seconds | Maximum duration of browser actions       |
+| Navigation timeout | 15 seconds | Maximum duration of navigation operations |
+
+CI retries failed tests up to two times, while local execution runs without retries by default.
+
+### Playwright Trace Viewer
+
+Playwright Trace Viewer supports detailed investigation of test execution, including actions, locator resolution, auto-waiting behavior, network activity, and DOM snapshots.
+
+Traces are collected automatically on the first retry. For local debugging, tracing can also be enabled explicitly:
+
+```bash
+npx playwright test tests/multiple-tabs.spec.ts --project=chromium --trace on
+```
+
+The resulting traces can be opened from the Playwright HTML report.
+
 ## AI Failure Analyzer
 
 The framework includes a custom AI-powered failure analyzer integrated with the Playwright reporter lifecycle. It automatically collects diagnostic information from failed tests, sanitizes sensitive data, and uses the OpenAI API to generate a structured failure analysis.
@@ -344,6 +370,28 @@ test-results/ai-failure-analysis.md
 Each failed test receives its own section containing the structured AI analysis. In CI, the report can be collected as a pipeline artifact for later inspection.
 
 The analyzer is intentionally diagnostic: the AI is instructed to base its conclusions only on the supplied failure evidence, distinguish facts from hypotheses, avoid inventing unsupported application behavior, and never recommend weakening secret sanitization.
+
+## Multi-Tab Testing and Debugging
+
+The framework includes browser tab handling tests in `tests/multiple-tabs.spec.ts`, using a public demo application to demonstrate Playwright's multi-page capabilities.
+
+The tests cover:
+
+- Opening and validating a new tab using `page.waitForEvent('popup')`.
+- Detecting a new page using `browserContext.waitForEvent('page')`.
+- Verifying elements in both the original and newly opened tabs.
+
+### Playwright Trace Viewer
+
+Playwright Trace Viewer supports detailed investigation of test execution, including actions, locator resolution, auto-waiting behavior, network activity, and DOM snapshots.
+
+Traces are collected automatically on the first retry. For local debugging, tracing can also be enabled explicitly:
+
+```bash
+npx playwright test tests/multiple-tabs.spec.ts --project=chromium --trace on
+```
+
+The resulting traces can be opened from the Playwright HTML report.
 
 ## Reports
 

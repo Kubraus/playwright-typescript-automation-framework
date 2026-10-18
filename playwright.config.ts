@@ -6,6 +6,10 @@ import { env } from './src/config/env';
  */
 export default defineConfig({
   testDir: './tests',
+  timeout: 30_000,
+  expect: {
+    timeout: 5_000,
+  },
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -28,6 +32,8 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('')`. */
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
+    actionTimeout: 10_000,
+    navigationTimeout: 15_000,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
