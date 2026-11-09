@@ -12,6 +12,8 @@ import { SignUpPage } from '../pages/signUp.page';
 import { ProfilePage } from '../pages/profile.page';
 import { SettingsPage } from '../pages/settings.page';
 import { ArticlesApi } from '../api/articles.api';
+import { FileUploadPage } from '../pages/file-upload.page';
+import { FileDownloadPage } from '../pages/file-download.page';
 
 export { expect } from '@playwright/test';
 
@@ -30,6 +32,8 @@ type TestFixtures = {
   settingsPage: SettingsPage;
   articlesApi: ArticlesApi;
   usersApi: UsersApi;
+  fileUploadPage: FileUploadPage;
+  fileDownloadPage: FileDownloadPage;
 };
 
 const createApiUser = async (request: APIRequestContext): Promise<ApiUser> => {
@@ -115,6 +119,18 @@ export const test = base.extend<TestFixtures>({
     const settingsPage = new SettingsPage(page);
 
     await use(settingsPage);
+  },
+
+  fileUploadPage: async ({ page }, use) => {
+    const fileUploadPage = new FileUploadPage(page);
+
+    await use(fileUploadPage);
+  },
+
+  fileDownloadPage: async ({ page }, use) => {
+    const fileDownloadPage = new FileDownloadPage(page);
+
+    await use(fileDownloadPage);
   },
 
   articlesApi: async ({ request }, use) => {

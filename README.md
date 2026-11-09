@@ -23,6 +23,8 @@ The goal was to build something closer to a real-world automation framework used
 | UI Testing                 | Automates end-to-end browser scenarios using Playwright                        |
 | Cross-Browser Testing      | Runs UI tests across Chromium, Firefox, and WebKit                             |
 | Multi-Tab Testing          | Validates new browser tabs using Playwright popup and browser context events   |
+| File Upload Testing        | Validates CSV uploads, including successful uploads and file size restrictions |
+| File Download Testing      | Validates browser downloads, filenames, and downloaded file content            |
 | API Testing                | Validates REST API endpoints independently from the UI                         |
 | Business Flows             | Combines API and UI interactions into reusable business scenarios              |
 | Page Object Model          | Encapsulates page elements and user interactions                               |
@@ -52,7 +54,7 @@ The goal was to build something closer to a real-world automation framework used
 ## Project Structure
 
 ```text
-playwright-realworld-framework/
+playwright-typescript-automation-framework/
 │
 ├── src/
 │   ├── ai/
@@ -81,6 +83,8 @@ playwright-realworld-framework/
 │   │   ├── article.page.ts
 │   │   ├── base.page.ts
 │   │   ├── editor.page.ts
+│   │   ├── file-download.page.ts
+│   │   ├── file-upload.page.ts
 │   │   ├── home.page.ts
 │   │   ├── login.page.ts
 │   │   ├── profile.page.ts
@@ -91,6 +95,9 @@ playwright-realworld-framework/
 │   │   └── ai-failure-reporter.ts
 │   │
 │   ├── test-data/
+│   │   ├── files/
+│   │   │   ├── contacts.csv
+│   │   │   └── large-file.csv
 │   │   ├── article.data.ts
 │   │   └── user.data.ts
 │   │
@@ -98,8 +105,12 @@ playwright-realworld-framework/
 │
 ├── tests/
 │   ├── api/
+│   │   ├── articles.api.spec.ts
+│   │   └── users.api.spec.ts
 │   ├── unit/
 │   │   └── secret-redactor.spec.ts
+│   ├── file-download.spec.ts
+│   ├── file-upload.spec.ts
 │   └── *.spec.ts
 │
 ├── .github/
@@ -209,6 +220,61 @@ npx playwright test --project=webkit
 ```
 
 API and unit tests run only in the Chromium project to avoid duplicating browser-independent tests across projects.
+
+## File Upload and Download Testing
+
+The framework includes automated file upload and download scenarios using Playwright and TypeScript.
+
+Both features follow the Page Object Model (POM) pattern and use custom Playwright fixtures for reusable page interactions.
+
+### File Upload
+
+File upload tests are executed against the [ExpandTesting practice application](https://practice.expandtesting.com/upload).
+
+The scenarios cover:
+
+- Successful upload of a valid CSV file.
+- Validation of the uploaded filename.
+- Rejection of CSV files exceeding the application's 500 KB size limit.
+- Cross-browser execution using Chromium, Firefox, and WebKit.
+
+**Known issue:** During testing, the practice application accepted an oversized CSV file in WebKit while rejecting it in Chromium and Firefox. The negative test uses Playwright's `test.fail()` annotation for WebKit to document this observed difference without silently skipping the scenario.
+
+### File Download
+
+The file download test uses an isolated HTML page with a `data:` URL to provide deterministic browser download behavior without relying on an external server.
+
+The test validates:
+
+- Download initiation using Playwright's `download` event.
+- The suggested filename.
+- Successful download completion.
+- Saving the file to the test output directory.
+- Exact content of the downloaded TXT file.
+
+This scenario verifies browser download handling and file validation. It does not test a real HTTP file-download endpoint.
+
+### Running File Tests
+
+Run upload and download tests across all configured browser projects:
+
+```bash
+npx playwright test tests/file-upload.spec.ts tests/file-download.spec.ts
+```
+
+Run download tests in WebKit only:
+
+```bash
+npx playwright test tests/file-download.spec.ts --project=webkit
+```
+
+Repeat the download test to investigate stability:
+
+```bash
+npx playwright test tests/file-download.spec.ts --project=firefox --repeat-each=5
+```
+
+The file upload tests depend on the availability and behavior of the external ExpandTesting application. The isolated download test does not require an external application.
 
 ## Framework Architecture
 
@@ -455,6 +521,12 @@ The GitHub Actions workflow is defined in:
 ```
 
 It provides automated test execution for the GitHub repository.
+
+The GitHub Actions pipeline also executes file upload and download tests across Chromium, Firefox, and WebKit.
+
+These tests cover successful CSV uploads, file size validation, browser download events, filename verification, and downloaded file content validation.
+
+Playwright reports and test artifacts are uploaded after execution, including when tests fail, to support debugging and failure analysis.
 
 ### GitLab CI
 
