@@ -238,7 +238,7 @@ The scenarios cover:
 - Rejection of CSV files exceeding the application's 500 KB size limit.
 - Cross-browser execution using Chromium, Firefox, and WebKit.
 
-**Known issue:** During testing, the practice application accepted an oversized CSV file in WebKit while rejecting it in Chromium and Firefox. The negative test uses Playwright's `test.fail()` annotation for WebKit to document this observed difference without silently skipping the scenario.
+**Known issue:** The external ExpandTesting application exhibits environment-dependent behavior when validating oversized CSV uploads in WebKit. During local testing on Windows, the application accepted files exceeding 500 KB, while the same validation test passed in GitHub Actions on Ubuntu. The test retains its strict assertion across all three browsers to make such differences visible.
 
 ### File Download
 
